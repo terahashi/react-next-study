@@ -1,7 +1,13 @@
+import React from 'react';
 import { useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+
+//⬇︎自分で追加(2025/7/1)
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import StudyHome from './pages/StudyHome';
+import Count from './pages/Count';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,13 +24,18 @@ function App() {
       </div>
       <h1>Vite + React</h1>
 
-      {/* <div className='card'>
+      <div className='card'>
         <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div> */}
-      <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
+      </div>
+
+      {/* ⬇︎自分で追加(2025/7/1) */}
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<StudyHome />} />
+          {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
+          <Route path='/Count' element={<Count />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
