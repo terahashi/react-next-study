@@ -8,6 +8,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import StudyHome from './pages/StudyHome';
 import Count from './pages/Count';
+import Count2 from './pages/Count2';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -22,18 +23,20 @@ function App() {
           <img src={reactLogo} className='logo react' alt='React logo' />
         </a>
       </div> */}
-      <h1>Vite + React</h1>
 
-      <div className='card'>
+      {/* <h1>Vite + React</h1> */}
+
+      {/* <div className='card'>
         <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-      </div>
+      </div> */}
 
       {/* ⬇︎自分で追加(2025/7/1) */}
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<StudyHome />} />
-          {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
+          <Route path='/' element={<StudyHome />} /> {/*⬅︎StudyHomeトップページ */}
           <Route path='/Count' element={<Count />} />
+          <Route path='/Count2' element={<Count2 />} />
+          {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>
     </>

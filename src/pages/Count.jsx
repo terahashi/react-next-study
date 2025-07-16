@@ -1,5 +1,4 @@
 // Count.jsxのような「カウント機能を持つ単独ウェブページ」は「pages/」に入れる。
-
 import { useState } from 'react';
 
 //⬇︎Countコンポーネント
@@ -8,6 +7,8 @@ const Count = () => {
   return (
     <>
       <h3>カウント機能 No1</h3>
+      <p>カウント機能を持つ単独ページを作成しよう。</p>
+      <br></br>
       <CountResult title='カウント' count={count} />
       <CountUpdate setCount={setCount} />
     </>
