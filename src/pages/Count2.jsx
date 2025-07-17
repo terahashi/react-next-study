@@ -15,7 +15,10 @@ const Example = () => {
 
   return (
     <>
-      <button onClick={toggleComponent}>ボタンを押すとA,B切り替わり</button>
+      <h3>カウント機能 No2</h3>
+      <p>カウント機能を持つ単独ページを作成しよう「2」</p>
+      <br></br>
+      <button onClick={toggleComponent}>ボタンを押すとA,B切り替わります</button>
       {/* ⬇︎Count2コンポーネントをここで実行。順序通りにJSXをブラウザに並ぶ。*/}
       {toggle ? <Count2 key='A' title='A' count={countA} setCount={setCountA} /> : <Count2 key='B' title='B' count={countB} setCount={setCountB} />}
     </>

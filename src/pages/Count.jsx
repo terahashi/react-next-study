@@ -7,7 +7,7 @@ const Count = () => {
   return (
     <>
       <h3>カウント機能 No1</h3>
-      <p>カウント機能を持つ単独ページを作成しよう。</p>
+      <p>カウント機能を持つ単独ページを作成しよう</p>
       <br></br>
       <CountResult title='カウント' count={count} />
       <CountUpdate setCount={setCount} />
