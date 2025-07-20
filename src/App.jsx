@@ -6,9 +6,10 @@ import './App.css';
 
 //⬇︎自分で追加(2025/7/1)
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import StudyHome from './pages/StudyHome';
-import Count from './pages/Count';
-import Count2 from './pages/Count2';
+import StudyHome from './pages/study/StudyHome';
+import Count from './pages/study/Count';
+import Count2 from './pages/study/Count2';
+import EventExample from './pages/study/EventExample';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -34,8 +35,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<StudyHome />} /> {/*⬅︎StudyHomeトップページ */}
-          <Route path='/Count' element={<Count />} />
-          <Route path='/Count2' element={<Count2 />} />
+          <Route path='study/Count' element={<Count />} />
+          <Route path='study/Count2' element={<Count2 />} />
+          <Route path='study/EventExample' element={<EventExample />} />
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>
