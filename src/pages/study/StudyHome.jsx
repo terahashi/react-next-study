@@ -1,10 +1,6 @@
 ///pages/StudyHome.jsx
-///⬇︎ここに勉強したものの「リンクリストを追加していく。」
-
+///⬇︎勉強したものの「リンクリストを追加していく。」
 import { Link } from 'react-router-dom';
-import Count from './Count';
-import Coutt2 from './Count2';
-import EventExample from './EventExample';
 
 const StudyHome = () => {
   return (
@@ -16,6 +12,8 @@ const StudyHome = () => {
       <Link to='study/Count2'>count2の勉強ページ</Link>
       <br></br>
       <Link to='study/EventExample'>イベントリスナーの勉強ページ</Link>
+      <br></br>
+      <Link to={'study/EventExample2'}>イベントリスナーの勉強ページ2</Link>
     </div>
   );
 };

@@ -13,7 +13,7 @@ const EventExample = () => {
       <h3>イベントリスナー No1</h3>
       <p>イベントリスナーを確認</p>
       <button onClick={clickHandler}>クリック</button>
-      <button onClick={clickHandler2}>クリック2</button>
+      <button onClick={clickHandler2}>クリック2(コンソール画面表示)</button>
     </>
   );
 };
