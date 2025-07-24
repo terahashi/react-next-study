@@ -14,6 +14,8 @@ const StudyHome = () => {
       <Link to='study/EventExample'>イベントリスナーの勉強ページ</Link>
       <br></br>
       <Link to={'study/EventExample2'}>イベントリスナーの勉強ページ2</Link>
+      <br></br>
+      <Link to={'study/ObjectState'}>オブジェクトのステートを更新しよう</Link>
     </div>
   );
 };
