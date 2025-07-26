@@ -13,6 +13,7 @@ import EventExample from './pages/study/EventExample';
 import EventExample2 from './pages/study/EvantExample2';
 import ObjectState from './pages/study/ObjectState';
 import ListKey from './pages/study/ListKey';
+import Filter from './pages/study/Filter';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -44,6 +45,7 @@ function App() {
           <Route path='study/EventExample2' element={<EventExample2 />} />
           <Route path='study/ObjectState' element={<ObjectState />} />
           <Route path='study/ListKey' element={<ListKey />} />
+          <Route path='study/Filter' element={<Filter />} />
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>

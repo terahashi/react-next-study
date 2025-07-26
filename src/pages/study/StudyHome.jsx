@@ -18,6 +18,8 @@ const StudyHome = () => {
       <Link to={'study/ObjectState'}>オブジェクトのステートを更新しよう</Link>
       <br></br>
       <Link to={'study/ListKey'}>リストに「Key」を設定しよう</Link>
+      <br></br>
+      <Link to={'study/Filter'}>配列のフィルターメソッドの使い方</Link>
     </div>
   );
 };
