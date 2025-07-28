@@ -20,6 +20,8 @@ const StudyHome = () => {
       <Link to={'study/ListKey'}>リストに「Key」を設定しよう</Link>
       <br></br>
       <Link to={'study/Filter'}>配列のフィルターメソッドの使い方</Link>
+      <br></br>
+      <Link to={'study/Filter2'}>配列のフィルターメソッドの使い方2</Link>
     </div>
   );
 };
