@@ -15,10 +15,10 @@ import ObjectState from './pages/study/ObjectState';
 import ListKey from './pages/study/ListKey';
 import Filter from './pages/study/Filter';
 import Filter2 from './pages/study/Filter2';
+import ConditionalBranch from './pages/study/ConditionalBranch';
 
 function App() {
   const [count, setCount] = useState(0);
-
   return (
     <>
       {/* <div>
@@ -48,6 +48,7 @@ function App() {
           <Route path='study/ListKey' element={<ListKey />} />
           <Route path='study/Filter' element={<Filter />} />
           <Route path='study/Filter2' element={<Filter2 />} />
+          <Route path='study/ConditionalBranch' element={<ConditionalBranch />} />
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>
