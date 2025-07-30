@@ -24,6 +24,8 @@ const StudyHome = () => {
       <Link to={'study/Filter2'}>配列のフィルターメソッドの使い方2</Link>
       <br></br>
       <Link to={'study/ConditionalBranch'}>条件分岐を設ける(if文、&&(論理AND演算子)、??(Null合体演算子)、３項演算子)</Link>
+      <br></br>
+      <Link to={'study/Refactor'}>コンポーネントのリファクタリング(整理)をしよう</Link>
     </div>
   );
 };
