@@ -17,6 +17,7 @@ import Filter from './pages/study/Filter';
 import Filter2 from './pages/study/Filter2';
 import ConditionalBranch from './pages/study/ConditionalBranch';
 import Refactor from './pages/study/Refactor';
+import InputTextarea from './pages/study/InputTextarea';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -51,6 +52,7 @@ function App() {
           <Route path='study/Filter2' element={<Filter2 />} />
           <Route path='study/ConditionalBranch' element={<ConditionalBranch />} />
           <Route path='study/Refactor' element={<Refactor />} />
+          <Route path='study/InputTextarea' element={<InputTextarea />} />
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>
