@@ -19,6 +19,7 @@ import ConditionalBranch from './pages/study/ConditionalBranch';
 import Refactor from './pages/study/Refactor';
 import InputTextarea from './pages/study/InputTextarea';
 import Radio from './pages/study/Radio';
+import SingleCheckBox from './pages/study/SingleCheckBox';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -55,6 +56,7 @@ function App() {
           <Route path='study/Refactor' element={<Refactor />} />
           <Route path='study/InputTextarea' element={<InputTextarea />} />
           <Route path='study/Radio' element={<Radio />} />
+          <Route path='study/SingleCheckBox' element={<SingleCheckBox />} />
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>

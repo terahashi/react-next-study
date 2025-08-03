@@ -30,6 +30,8 @@ const StudyHome = () => {
       <Link to={'study/InputTextarea'}>フォームの「InputとTextarea」を作成してみよう</Link>
       <br></br>
       <Link to={'study/Radio'}>ラジオボタンを作成してみよう</Link>
+      <br></br>
+      <Link to={'study/SingleCheckBox'}>シンプルなチェックボックスを作成してみよう</Link>
     </div>
   );
 };
