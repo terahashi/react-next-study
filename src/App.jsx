@@ -20,6 +20,7 @@ import Refactor from './pages/study/Refactor';
 import InputTextarea from './pages/study/InputTextarea';
 import Radio from './pages/study/Radio';
 import SingleCheckBox from './pages/study/SingleCheckBox';
+import MultipleCheckBox from './pages/study/MultipleCheckBox';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -57,6 +58,7 @@ function App() {
           <Route path='study/InputTextarea' element={<InputTextarea />} />
           <Route path='study/Radio' element={<Radio />} />
           <Route path='study/SingleCheckBox' element={<SingleCheckBox />} />
+          <Route path='study/MultipleCheckBox' element={<MultipleCheckBox />} />
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>
