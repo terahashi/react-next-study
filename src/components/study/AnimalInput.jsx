@@ -1,3 +1,4 @@
+//Refactor.jsx
 //④AnimalInputを作成
 
 const AnimalInput = ({ InputState }) => {

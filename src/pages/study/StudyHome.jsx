@@ -36,6 +36,8 @@ const StudyHome = () => {
       <Link to={'study/MultipleCheckBox'}>複数のチェックボックスを作成してみよう</Link>
       <br></br>
       <Link to={'study/Select'}>プルダウンボタンを作成する</Link>
+      <br></br>
+      <Link to={'study/TodoApp'}>Todoアプリを作成してみよう</Link>
     </div>
   );
 };

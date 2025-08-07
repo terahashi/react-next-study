@@ -1,4 +1,5 @@
-/* ①「<ul>をリファクタリングする。」 */
+//Refactor.jsx
+//①「<ul>をリファクタリングする。」
 
 import AnimalItem from './AnimalItem';
 

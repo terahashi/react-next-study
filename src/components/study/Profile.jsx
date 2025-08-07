@@ -1,3 +1,6 @@
+//ListKey.jsx
+//Filter2.jsx
+
 //ListKeyから{ name, age, hobbies }が渡ってくる。
 const Profile = ({ name, age, hobbies }) => {
   return (

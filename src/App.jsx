@@ -22,6 +22,7 @@ import Radio from './pages/study/Radio';
 import SingleCheckBox from './pages/study/SingleCheckBox';
 import MultipleCheckBox from './pages/study/MultipleCheckBox';
 import Select from './pages/study/Select';
+import TodoApp from './pages/study/TodoApp';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -61,6 +62,7 @@ function App() {
           <Route path='study/SingleCheckBox' element={<SingleCheckBox />} />
           <Route path='study/MultipleCheckBox' element={<MultipleCheckBox />} />
           <Route path='study/Select' element={<Select />} />
+          <Route path='study/TodoApp' element={<TodoApp />} />
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
         </Routes>
       </BrowserRouter>

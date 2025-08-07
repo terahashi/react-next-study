@@ -1,3 +1,4 @@
+//components/study/AnimalList.jsx
 //③AnimalItemを追加
 
 const AnimalItem = ({ animal }) => {
