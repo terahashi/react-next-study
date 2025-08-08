@@ -4,8 +4,8 @@ import { useState } from 'react';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 
+//⬇︎配列のオブジェクト達
 const Todo = () => {
-  //⬇︎配列のオブジェクト達
   const todosList = [
     {
       id: 1,
@@ -20,23 +20,26 @@ const Todo = () => {
       content: '郵便出す',
     },
   ];
-
   ////⬇︎todosListをuseStateで定義する。
   const [todos, setTodos] = useState(todosList);
 
-  ////⬇︎deleteTodoをcomplete関数で使用する。
+  ////⬇︎deleteTodoを「TodoList.jsxへ渡す。」
   const deleteTodo = (id) => {
     const newTodos = todos.filter((todo) => {
       return todo.id !== id;
     });
-    //⬇︎setTodosで「newTodoを更新(完了ボタンを押したら一致したidが削除される)」
-    setTodos(newTodos);
+    setTodos(newTodos); //⬅︎setTodosで「newTodosを更新(完了ボタンを押したら一致したidが削除される)」
+  };
+
+  ////⬇︎createTodoを「TodoForm.jsxへ渡す。【追加ボタンで新しいidとcontentが作成される】。」
+  const createTodo = (todo) => {
+    setTodos([...todos, todo]);
   };
 
   return (
     <>
       <TodoList todos={todos} deleteTodo={deleteTodo} />
-      <TodoForm />
+      <TodoForm createTodo={createTodo} />
     </>
   );
 };
