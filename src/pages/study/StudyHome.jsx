@@ -38,6 +38,8 @@ const StudyHome = () => {
       <Link to={'study/Select'}>プルダウンボタンを作成する</Link>
       <br></br>
       <Link to={'study/TodoApp'}>Todoアプリを作成してみよう</Link>
+      <br></br>
+      <Link to={'study/CssInjs'}>Css In jsを練習してみよう</Link>
     </div>
   );
 };
