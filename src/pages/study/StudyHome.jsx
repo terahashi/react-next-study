@@ -7,6 +7,8 @@ const StudyHome = () => {
     <div>
       <h1>Vite + React</h1>
       <h1>StudyHomeのトップページです。</h1>
+      <Link to={'study/TodoApp'}>Todoアプリを作成してみよう</Link>
+      <br></br>
       <Link to='study/Count'>countの勉強ページ</Link>
       <br></br>
       <Link to='study/Count2'>count2の勉強ページ</Link>
@@ -40,6 +42,8 @@ const StudyHome = () => {
       <Link to={'study/TodoApp'}>Todoアプリを作成してみよう</Link>
       <br></br>
       <Link to={'study/CssInjs'}>Css In jsを練習してみよう</Link>
+      <br></br>
+      <Link to={'study/ModalLesson'}>モーダルを作成してみよう</Link>
     </div>
   );
 };
