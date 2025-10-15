@@ -4,7 +4,6 @@ import styled from 'styled-components';
 // console.dir(styled);
 
 ////⬇︎styled-components
-
 const StyledButton = styled.button`
   margin-inline: auto;
   border-radius: 9999px;

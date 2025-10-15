@@ -24,6 +24,7 @@ import MultipleCheckBox from './pages/study/MultipleCheckBox';
 import Select from './pages/study/Select';
 import TodoApp from './pages/study/TodoApp';
 import CssInjs from './pages/study/CssInjs_Practice';
+import ModalLesson from './pages/study/ModalLesson';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -65,6 +66,7 @@ function App() {
           <Route path='study/Select' element={<Select />} />
           <Route path='study/TodoApp' element={<TodoApp />} />
           <Route path='study/CssInjs' element={<CssInjs />} />
+          <Route path='study/ModalLesson' element={<ModalLesson />} />
           {/* ++++++++追記：ポートフォリオは、基本的にcssは「Tailwind CSS でサクッと作り、
           もし細かい動的スタイルが必要になったら一部だけ CSS-in-JS を使う。」 */}
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
