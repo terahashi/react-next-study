@@ -44,6 +44,7 @@ const StudyHome = () => {
       <Link to={'study/CssInjs'}>Css In jsを練習してみよう</Link>
       <br></br>
       <Link to={'study/ModalLesson'}>モーダルを作成してみよう</Link>
+      <br></br>
     </div>
   );
 };
