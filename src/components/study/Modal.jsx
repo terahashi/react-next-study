@@ -48,7 +48,7 @@ const Modal = ({ onClose }) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
-    //⬆「自分がクリックした場所（e.target）」と「今この関数が登録されている要素（e.currentTarget...つまり<Overlay>のことだよ）」が同じか？を確認しています。
+    //⬆「自分がクリックした場所（e.target）」と「今この関数が登録されている要素（e.currentTarget...つまり<Overlay>グレー背景のことだよ）」が同じか？を確認しています。
     //「モーダルの中身（Content）がクリックされたときは、閉じない」
     //「モーダルの背景（Overlay）がクリックされたときだけ、onClose();でモーダルを閉じる」
   };
