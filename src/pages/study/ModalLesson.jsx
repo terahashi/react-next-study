@@ -1,7 +1,7 @@
 ////ModalLessonは「開く／閉じるのスイッチ係」
-
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+
 import Modal from '../../components/study/Modal';
 
 const ModalLesson = () => {
