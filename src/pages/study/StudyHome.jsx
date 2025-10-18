@@ -47,6 +47,7 @@ const StudyHome = () => {
       <br></br>
       <Link to={'study/ToastLesson'}>トーストを作成してみよう</Link>
       <br></br>
+      <Link to={'study/UseRef'}>UseRefでDOMを直接操作する</Link>
     </div>
   );
 };
