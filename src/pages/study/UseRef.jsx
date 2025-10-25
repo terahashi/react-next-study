@@ -3,7 +3,7 @@
 //・【DOM要素へのアクセスを保持できる】のが「useRef」です。
 import { useState, useRef } from 'react';
 
-//// ⬇︎①Case1 「useRefでDOMを取得」
+///////// ⬇︎①Case1 「useRefでDOMを取得」してみよう。
 //「refオブジェクト(inputRef)」をref(ref={inputRef})属性に渡すとDOMを参照することができます。
 const Case1 = () => {
   const [value, setValue] = useState('');
@@ -21,7 +21,7 @@ const Case1 = () => {
   );
 };
 
-// ////②Case2 「動画の再生・停止を制御」
+///////// ②Case2 「動画の再生・停止を制御」をしてみよう。
 // const Case2 = () => {
 //   const [playing, setPlaying] = useState(false);
 //   const videoRef = useRef(); //video要素を参照するためのrefオブジェクト
@@ -35,7 +35,6 @@ const Case1 = () => {
 //     }
 //     setPlaying(!playing); //playingの状態を反転(trueに更新 または falseに更新)
 //   };
-
 //   return (
 //     <>
 //       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -48,21 +47,60 @@ const Case1 = () => {
 //   );
 // };
 
+///////// ③Case3 useRefとは?「再レンダリングせずに値を保持する」を確認する
+const createTimeStamp = () => new Date().getTime();
+
+const Case3 = () => {
+  const [timeStamp, setValue] = useState(createTimeStamp()); //普通のstateを作成
+  const ref = useRef(createTimeStamp()); //refオブジェクトを作成
+
+  ////■イベントハンドラー
+  //⬇︎stateを更新する関数(createTimeStamp(現在の時刻)で現在のタイムスタンプを取得してstateに代入)
+  const updateState = () => {
+    setValue(createTimeStamp());
+  };
+  //⬇︎ref.currentを更新する関数(createTimeStamp(現在の時刻)で現在のタイムスタンプを取得してref.currentに代入)
+  const updateRef = () => {
+    ref.current = createTimeStamp();
+    console.log('ref.current ->', ref.current);
+  };
+
+  return (
+    <div>
+      <h3>
+        stateでTimestamp(現在の時刻)を更新: {timeStamp}
+        <button onClick={updateState}>更新</button>
+      </h3>
+      <h3>
+        ref(コンソールにTimestamp(現在の時刻)が表示される): {ref.current}
+        <button onClick={updateRef}>更新</button>
+      </h3>
+    </div>
+  );
+};
+
 //// ⬇︎UseRefコンポーネント
 const UseRef = () => {
   return (
     <div>
-      <h2 style={{ marginBottom: '50px' }}>UseRefの勉強ページです。</h2>
+      <h2 style={{ marginBottom: '60px' }}>UseRefの勉強ページです。</h2>
 
       <div style={{ marginBottom: '80px' }}>
-        <p>①useRefを使ってDOM要素にアクセスする</p>
+        <h2 style={{ marginBottom: '0px' }}>ユースケース1</h2>
+        <p>①useRefを使ってDOM要素(inputに)にアクセスする</p>
         <Case1 />
       </div>
 
-      {/* <div style={{ marginBottom: '40px' }}>
+      {/* <div style={{ marginBottom: '80px' }}>
         <p>②useRefを使って動画の再生・停止を制御する</p>
         <Case2 />
       </div> */}
+
+      <div style={{ marginBottom: '80px' }}>
+        <h2 style={{ marginBottom: '0px' }}>ユースケース2</h2>
+        <p>③useRefを使って再レンダリングせずに値を保持する</p>
+        <Case3 />
+      </div>
     </div>
   );
 };
