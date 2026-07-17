@@ -9,6 +9,8 @@ const StudyHome = () => {
       <h1>StudyHomeのトップページです。</h1>
       <Link to={'study/TodoApp'}>Todoアプリを作成してみよう</Link>
       <br></br>
+      <Link to={'study/PostApp'}>(fetchテスト)APIデータ取得用のコンポーネントを作成してみよう</Link>
+      <br></br>
       <Link to='study/Count'>countの勉強ページ</Link>
       <br></br>
       <Link to='study/Count2'>count2の勉強ページ</Link>
