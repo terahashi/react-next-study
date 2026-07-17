@@ -29,7 +29,7 @@ const ObjectState = () => {
       <input type='text' order={order.item} onChange={chengeItem} />
       <br />
       <button onClick={countUp}>+</button>
-      <button onClick={countDown}>+</button>
+      <button onClick={countDown}>-</button>
     </>
   );
 };
