@@ -28,6 +28,7 @@ import ModalLesson from './pages/study/ModalLesson';
 import ToastLesson from './pages/study/ToastLesson';
 import UseRef from './pages/study/UseRef';
 import PostApp from './pages/study/PostApp';
+import { TabApp } from './pages/study/TabApp';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -76,6 +77,7 @@ function App() {
           <Route path='study/ToastLesson' element={<ToastLesson />} />
           <Route path='study/UseRef' element={<UseRef />} />
           <Route path='study/PostApp' element={<PostApp />} />
+          <Route path='study/TabApp' element={<TabApp />} />
           {/* ++++++++追記：ポートフォリオは、基本的にcssは「Tailwind CSS でサクッと作り、
           もし細かい動的スタイルが必要になったら一部だけ CSS-in-JS を使う。」 */}
           {/* <Route path='./pages/Count' element={<Count />} /> ⬅︎これだとエラー。【pathはURL】であってファイルの場所ではない！ */}
