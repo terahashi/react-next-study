@@ -13,6 +13,8 @@ const StudyHome = () => {
       <br></br>
       <Link to={'study/TabApp'}>タブ切り替え用のコンポーネントを作成してみよう</Link>
       <br></br>
+      <Link to={'study/FormApp'}>バリデーション(入力値の検証)付きフォーム用のコンポーネントを作成してみよう</Link>
+      <br></br>
       <Link to='study/Count'>countの勉強ページ</Link>
       <br></br>
       <Link to='study/Count2'>count2の勉強ページ</Link>
