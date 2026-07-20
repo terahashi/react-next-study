@@ -15,6 +15,8 @@ const StudyHome = () => {
       <br></br>
       <Link to={'study/FormApp'}>バリデーション(入力値の検証)付きフォーム用のコンポーネントを作成してみよう</Link>
       <br></br>
+      <Link to={'study/CardApp'}>カードコンポーネント(カードの高さが自動でピタッと揃い、ボタンが一番下に綺麗に整列するコンポーネント)を作成してみよう</Link>
+      <br></br>
       <Link to='study/Count'>countの勉強ページ</Link>
       <br></br>
       <Link to='study/Count2'>count2の勉強ページ</Link>
