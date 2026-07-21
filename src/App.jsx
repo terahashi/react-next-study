@@ -31,6 +31,7 @@ import PostApp from './pages/study/PostApp';
 import { TabApp } from './pages/study/TabApp';
 import { FormApp } from './pages/study/FormApp';
 import { CardApp } from './pages/study/CardApp';
+import { AccordionApp } from './pages/study/AccordionApp';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -82,6 +83,7 @@ function App() {
           <Route path='study/TabApp' element={<TabApp />} />
           <Route path='study/FormApp' element={<FormApp />} />
           <Route path='study/CardApp' element={<CardApp />} />
+          <Route path='study/AccordionApp' element={<AccordionApp />} />
           {/* ⬇︎これだとエラー。【❌pathはURLであってファイルの場所ではない！】*/}
           {/* <Route path='./pages/Count' element={<Count />} />*/}
         </Routes>
