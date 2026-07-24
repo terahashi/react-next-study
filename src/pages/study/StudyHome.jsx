@@ -11,11 +11,13 @@ const StudyHome = () => {
       <br></br>
       <Link to={'study/PostApp'}>(fetchテスト)APIデータ取得用のコンポーネントを作成してみよう</Link>
       <br></br>
+      <Link to={'study/PostApp2'}>(fetchテスト2)画面が開いた瞬間に「データ取得中...」と表示され、1〜2秒後にサーバーから届いたユーザー一覧（名前・メール）が画面に並びます。</Link>
+      <br></br>
       <Link to={'study/TabApp'}>タブ切り替え用のコンポーネントを作成してみよう</Link>
       <br></br>
       <Link to={'study/FormApp'}>バリデーション(入力値の検証)付きフォーム用のコンポーネントを作成してみよう</Link>
       <br></br>
-      <Link to={'study/FormApp2'}>FormApp.jsxの「バリデーション(入力値の検証)付きフォームを更に応用した」練習問題。</Link>
+      <Link to='/study/PostApp2'>FormApp.jsxの「バリデーション(入力値の検証)付きフォームを更に応用した」練習問題。</Link>
       <br></br>
       <Link to={'study/CardApp'}>カードコンポーネント(カードの高さが自動でピタッと揃い、ボタンが一番下に綺麗に整列するコンポーネント)を作成してみよう</Link>
       <br></br>
