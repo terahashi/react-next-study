@@ -35,6 +35,7 @@ import { AccordionApp } from './pages/study/AccordionApp';
 import { SearchFilterApp } from './pages/study/SearchFilterApp';
 import { FormApp2 } from './pages/study/FormApp2';
 import { PostApp2 } from './pages/study/PostApp2';
+import { PostApp3 } from './pages/study/PostApp3';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -90,6 +91,7 @@ function App() {
           <Route path='study/SearchFilterApp' element={<SearchFilterApp />} />
           <Route path='study/FormApp2' element={<FormApp2 />} />
           <Route path='study/PostApp2' element={<PostApp2 />} />
+          <Route path='study/PostApp3' element={<PostApp3 />} />
           {/* ⬇︎これだとエラー。【❌pathはURLであってファイルの場所ではない！】*/}
           {/* <Route path='./pages/Count' element={<Count />} />*/}
         </Routes>
