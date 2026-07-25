@@ -13,6 +13,8 @@ const StudyHome = () => {
       <br></br>
       <Link to={'study/PostApp2'}>(fetchテスト2)画面が開いた瞬間に「データ取得中...」と表示され、1〜2秒後にサーバーから届いたユーザー一覧（名前・メール）が画面に並びます。</Link>
       <br></br>
+      <Link to={'study/PostApp3'}>(fetchテスト3)画面が開いたらユーザーの一覧をAPIから取得し、上の検索窓に文字を入力すると、リアルタイムで該当するユーザーだけが絞り込まれる。</Link>
+      <br></br>
       <Link to={'study/TabApp'}>タブ切り替え用のコンポーネントを作成してみよう</Link>
       <br></br>
       <Link to={'study/FormApp'}>バリデーション(入力値の検証)付きフォーム用のコンポーネントを作成してみよう</Link>
