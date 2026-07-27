@@ -17,9 +17,11 @@ const StudyHome = () => {
       <br></br>
       <Link to={'study/TabApp'}>タブ切り替え用のコンポーネントを作成してみよう</Link>
       <br></br>
-      <Link to={'study/FormApp'}>バリデーション(入力値の検証)付きフォーム用のコンポーネントを作成してみよう</Link>
+      <Link to={'study/FormApp'}>(バリデーション1 / FormApp.jsx)バリデーション(入力値の検証)付きフォーム用のコンポーネントを作成してみよう</Link>
       <br></br>
-      <Link to='/study/PostApp2'>FormApp.jsxの「バリデーション(入力値の検証)付きフォームを更に応用した」練習問題。</Link>
+      <Link to='/study/FormApp2'>(バリデーション2 / FormApp2.jsx)FormApp.jsxの「バリデーション(入力値の検証)付きフォームを更に応用した」練習問題。</Link>
+      <br></br>
+      <Link to='/study/FormApp3'>(バリデーション3 / FormApp3.jsx)FormApp.jsxとFormApp2.jsxの「バリデーション(入力値の検証)付きフォームを更に応用した」練習問題。</Link>
       <br></br>
       <Link to={'study/CardApp'}>カードコンポーネント(カードの高さが自動でピタッと揃い、ボタンが一番下に綺麗に整列するコンポーネント)を作成してみよう</Link>
       <br></br>
