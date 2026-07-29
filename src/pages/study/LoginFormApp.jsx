@@ -18,6 +18,8 @@
 // Supabase 自身が「APIプログラムを動かすサーバー」を最初から用意してくれている！
 
 import React, { useState } from 'react';
+import { Login } from '../../components/study/Login';
+import { LoginSuccess } from '../../components/study/LoginSuccess';
 
 export const LoginFormApp = () => {
   //1: Formの入力値のstate(メール、パスワード)
@@ -51,7 +53,7 @@ export const LoginFormApp = () => {
     e.preventDefault();
 
     // アラートチェック
-    if (!formData || !formData.password) {
+    if (!formData.email || !formData.password) {
       alert('メールアドレスとパスワードを入力してください');
       return;
     }
@@ -68,14 +70,18 @@ export const LoginFormApp = () => {
   };
 
   //ログイン成功時は完了画面を返す(アーリーリターン)
+  if (isLoggedIn) {
+    return <LoginSuccess email={formData.email} onReset={handleLogout} />;
+  }
 
   //JSX「ログインフォーム」
   return (
     <div style={{ padding: '20px', margin: '0 auto' }}>
       <h2>ログインフォーム</h2>
 
-      <form onSubmit={handleSubmit} style={{ display: 'block', padding: '20px' }}>
-        {/* メールアドレス */}
+      {/* ⬇︎ログインフォーム初期画面 */}
+      <Login formData={formData} showPassword={showPassword} onChange={handleChange} onTogglePassword={togglePasswordVisibility} onSubmit={handleSubmit} />
+      {/* <form onSubmit={handleSubmit} style={{ display: 'block', padding: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
           <label htmlFor='email' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
             メールアドレス:
@@ -88,10 +94,10 @@ export const LoginFormApp = () => {
             onChange={handleChange}
             placeholder='yourMail@email.com'
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+            autoComplete='email'
           />
         </div>
 
-        {/* パスワード入力欄 */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
           <label htmlFor='password' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
             パスワード:
@@ -104,15 +110,14 @@ export const LoginFormApp = () => {
             onChange={handleChange}
             placeholder='パスワードを入力'
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+            autoComplete='current-password'
           />
 
-          {/* 「パスワードを目視」する用の表示・非表示の切り替え */}
           <button type='button' onClick={togglePasswordVisibility} style={{ whiteSpace: 'nowrap', cursor: 'pointer' }}>
             {showPassword ? 'pass非表示' : '👁️'}
           </button>
         </div>
 
-        {/* ログイン送信ボタン */}
         <button
           type='submit'
           style={{
@@ -126,7 +131,7 @@ export const LoginFormApp = () => {
         >
           ログイン
         </button>
-      </form>
+      </form> */}
     </div>
   );
 };
