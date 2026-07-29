@@ -7,6 +7,8 @@ const StudyHome = () => {
     <div>
       <h1>Vite + React</h1>
       <h1>StudyHomeのトップページです。</h1>
+      <Link to='/study/LoginFormApp'>実際の「パスワード付きのログインフォーム」を作成しよう。</Link>
+      <br></br>
       <Link to={'study/TodoApp'}>Todoアプリを作成してみよう</Link>
       <br></br>
       <Link to={'study/PostApp'}>(fetchテスト)APIデータ取得用のコンポーネントを作成してみよう</Link>
