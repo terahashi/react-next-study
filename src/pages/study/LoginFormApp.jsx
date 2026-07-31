@@ -18,6 +18,8 @@
 // Supabase 自身が「APIプログラムを動かすサーバー」を最初から用意してくれている！
 
 import React, { useState } from 'react';
+import { supabase } from '../../lib/supabaseClient'; // Supabaseの公式ライブラリ
+
 import { Login } from '../../components/study/Login';
 import { LoginSuccess } from '../../components/study/LoginSuccess';
 
@@ -49,7 +51,8 @@ export const LoginFormApp = () => {
   };
 
   //「ログイン送信」ボタンのイベントハンドラー
-  const handleSubmit = (e) => {
+  //【Supabase】に「ログインして！」と通信する
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // アラートチェック
@@ -57,9 +60,24 @@ export const LoginFormApp = () => {
       alert('メールアドレスとパスワードを入力してください');
       return;
     }
-
-    //アーリーリターン用に「ログイン完了状態のフラグをtrue」にする。
-    setIsLoggedIn(true);
+    try {
+      //🚀【Supabase】に「ログインして！」と通信する
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+      //エラーがあったら（メアド間違い、パスワード間違いなど）
+      if (error) {
+        alert(`ログイン失敗: ${error.message}`);
+        return;
+      }
+      //ログイン成功したら画面を切り替える！
+      //アーリーリターン用に「ログイン完了状態のフラグをtrue」にする。
+      console.log('ログイン成功データ:', data);
+      setIsLoggedIn(true);
+    } catch (err) {
+      alert('予期せぬエラーが発生しました');
+    }
   };
 
   //「ログアウト(リセット)」イベントハンドラー

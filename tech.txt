@@ -46,7 +46,7 @@ Supabase Auth➡️APIの役割
 
 
 
-💡3: データベース（DB）
+💡3: データベース（DB）、Supabaseの管理画面内で操作する作業
 ・役割:
 登録されている「メールアドレス」や「暗号化されたパスワード」を保存しておく。
 
@@ -65,6 +65,10 @@ Supabase (PostgreSQL)➡️データベース（DB）の役割
 ・使う技術:
 JWT（JSON Web Token）: ログイン成功時にサーバーから送られる「デジタル通行証」。React側はこれを受け取って保持しておく。
 Cookie / セッション: ブラウザに安全に鍵を保存する仕組み。
+
+
+
+
 
 
 
@@ -107,10 +111,20 @@ Node.js や PHP で「ログイン判定用のプログラム（API）」を自�
 
 
 
+
+
+
+
 🍎全体の作成手順（5ステップ）
+
+
+
 
 💡【ステップ1】画面の見た目とUIロジックを作る（★今ここ！）
 まずは React だけで、ユーザーに見える画面（フロントエンド）を完成させます。
+
+
+使うもの: React のみ
 
 
 ・やること:
@@ -118,10 +132,21 @@ Node.js や PHP で「ログイン判定用のプログラム（API）」を自�
 例題11でやる「パスワード表示/非表示」切り替え機能
 入力漏れなどをチェックする「バリデーション機能」
 送信ボタンを押した時の「ローディング表示（ぐるぐる）」などの見た目の状態（State）管理
-使うもの: React のみ
+
+
+
+
+
+
+
+
 
 💡【ステップ2】Supabase（バックエンド）の準備をする
 ここでバックエンド（API・認証・データベース）を準備します。コードを書く必要はなく、ブラウザ上でポチポチ操作するだけです！
+
+
+・使うもの:
+Supabase（ブラウザ画面）
 
 
 ・やること:
@@ -129,8 +154,11 @@ Supabase に無料アカウント登録
 プロジェクト（自分専用のバックエンド環境）を1つ作成する
 「Authentication（認証機能）」をオンにする
 
-・使うもの:
-Supabase（ブラウザ画面）
+
+
+
+
+
 
 
 
@@ -140,13 +168,28 @@ Supabase（ブラウザ画面）
 Reactのプロジェクトに Supabase の公式ライブラリを入れ、接続設定を行います。
 
 
-・やること:
-npm install @supabase/supabase-js でライブラリをインストール
-Supabase の管理画面から「URL」と「APIキー（鍵）」をコピーして、React側に貼り付ける（これだけで接続完了！）
-
 
 ・使うもの:
 React, Supabase
+
+
+
+・やること:
+1:npm install @supabase/supabase-js でライブラリをインストール
+Supabase の管理画面から「URL」と「APIキー（鍵）」をコピーして、React側に貼り付ける（これだけで接続完了！）
+
+2:「.env.localファイル」の作成。
+中身は「URL」と「APIキー（鍵）」を入れる。
+
+3:「supabaseClient.jsファイル」の作成。
+Supabaseと通信するためのクライアントを作成してエクスポートする。
+詳しくは「supabaseClient.jsファイル」を見よう。
+
+
+
+
+
+
 
 
 
@@ -156,16 +199,34 @@ React, Supabase
 
 ステップ1で作ったフォームの「送信ボタン」を押したときに、Supabase の認証APIを呼び出すコードを組み込みます。
 
+
+
+・使うもの:
+React, Supabase API
+
+
+
+
 ・やること:
+ログイン処理 ➔ supabase.auth.signInWithPassword({ email, password }) を実行
 会員登録時 ➔ supabase.auth.signUp({ email, password }) を実行
-ログイン時 ➔ supabase.auth.signInWithPassword({ email, password }) を実行
 成功したら「ログイン成功！」画面に切り替える（アーリーリターンやState切り替え）
 裏側で自動発行された JWT（通行証） を受け取ってログイン状態を保持する
 
 
 
-・使うもの:
-React, Supabase API
+・LoginFormApp.jsxに記載する。
+‼️「ログイン処理」の追加
+1:handleSubmit に async/await を追加
+2:supabase.auth.signInWithPassword({ email, password }) を実行
+3:テスト用ユーザーで認証し、isLoggedIn の State を true に切り替えて画面遷移
+4:バックエンドから送られた JWT（通行証）を受け取ってログイン完了！
+
+
+‼️「会員登録の処理」の追加
+1:
+
+
 
 
 
@@ -178,13 +239,17 @@ React, Supabase API
 ログインしているユーザーだけが見られる特別なページを作成します。
 
 
+
+・使うもの:
+React, Supabase API
+
+
+
 ・やること:
 JWT（通行証）を持っているユーザーだけがアクセスできる「マイページ」を作成
 「ログアウト」ボタンを押したら JWT を破棄してログイン画面に戻す処理
 
 
-・使うもの:
-React, Supabase API
 
 
 ====================================
