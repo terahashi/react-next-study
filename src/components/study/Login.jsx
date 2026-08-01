@@ -1,9 +1,9 @@
 //LoginFormApp.jsxから責務分離
 //ログインフォーム初期画面
 
-export const Login = ({ formData, showPassword, onChange, onTogglePassword, onSubmit }) => {
+export const Login = ({ formData, showPassword, errorMessage, onChange, onTogglePassword, handleLogin, handleSignup }) => {
   return (
-    <form onSubmit={onSubmit} style={{ display: 'block', padding: '20px' }}>
+    <form onSubmit={handleLogin} style={{ display: 'block', padding: '20px' }}>
       {/* メールアドレス */}
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
         <label htmlFor='email' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
@@ -20,7 +20,6 @@ export const Login = ({ formData, showPassword, onChange, onTogglePassword, onSu
           autoComplete='email'
         />
       </div>
-
       {/* パスワード入力欄 */}
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
         <label htmlFor='password' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
@@ -43,20 +42,41 @@ export const Login = ({ formData, showPassword, onChange, onTogglePassword, onSu
         </button>
       </div>
 
-      {/* ログイン送信ボタン */}
-      <button
-        type='submit'
-        style={{
-          padding: '10px',
-          backgroundColor: '#007bff',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
-      >
-        ログイン
-      </button>
+      {/* エラーメッセージがある場合は表示する */}
+      {errorMessage && <p style={{ color: 'red', marginBottom: '15px' }}>{errorMessage}</p>}
+
+      {/* ログインボタンと新規登録ボタン */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        {/* ログイン送信ボタン */}
+        <button
+          type='submit'
+          style={{
+            padding: '10px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          ログイン
+        </button>
+        {/* 新規登録ボタン */}
+        <button
+          type='button'
+          style={{
+            padding: '10px',
+            backgroundColor: '#28a745',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+          onClick={handleSignup}
+        >
+          新規登録
+        </button>
+      </div>
     </form>
   );
 };

@@ -217,17 +217,24 @@ React, Supabase API
 
 ・LoginFormApp.jsxに記載する。
 ‼️「ログイン処理」の追加
-1:handleSubmit に async/await を追加
-2:supabase.auth.signInWithPassword({ email, password }) を実行
+1:handleLoginイベントを追加
+2:supabase.auth.signInWithPassword({ email: formData.email, password: formData.password, }) を実行。
 3:テスト用ユーザーで認証し、isLoggedIn の State を true に切り替えて画面遷移
 4:バックエンドから送られた JWT（通行証）を受け取ってログイン完了！
 
 
 ‼️「会員登録の処理」の追加
-1:
+1:handleSignupイベントを追加
+2:supabase.auth.signUp({.  email: formData.email, password: formData.password, })  を実行。
+3:テスト用ユーザーで新規登録し、 alert('新規登録が完了しました！')でブラウザ通知表示する
+4:新規登録完了
 
 
 
+
+‼️「アカウントをお持ちでない方はこちら」をクリック」と、「すでにアカウントをお持ちの方はログイン」のモード切り替えUIの追加。
+「アカウントをお持ちでない方はこちら」をクリック ➔ 画面が「新規登録モード」に切り替わり、ボタンも「新規登録」1つになる。
+「すでにアカウントをお持ちの方はログイン」をクリック ➔ 画面が「ログインモード」に切り替わる。ボタンも「ログイン」1つになる。
 
 
 

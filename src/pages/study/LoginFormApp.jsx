@@ -23,6 +23,37 @@ import { supabase } from '../../lib/supabaseClient'; // Supabaseの公式ライ�
 import { Login } from '../../components/study/Login';
 import { LoginSuccess } from '../../components/study/LoginSuccess';
 
+// エラーの日本語化：ログインや新規登録で表示される「Supabaseの英語エラー」を日本語に変換する関数を作成
+const translateError = (errorMessage) => {
+  if (!errorMessage) return ''; // 「エラーメッセージが無い場合」は空文字を返す
+
+  // エラーの日本語訳を定義する
+  const errorTranslations = {
+    'email rate limit exceeded': 'メールの送信制限を超えました。しばらく待ってから再試行してください。',
+    email_not_confirmed: 'メールアドレスが確認されていません。確認メールをチェックしてください。',
+    'Email not confirmed': 'メールアドレスが確認されていません。確認メールをチェックしてください。',
+    over_email_send_rate_limit: 'メールの送信制限を超えました。しばらく待ってから再試行してください。',
+    email_already_in_use: 'このメールアドレスはすでに使用されています。',
+    invalid_email: 'メールアドレスが無効です。正しい形式を使用してください。',
+    'missing email or phone': 'ログインに必要な項目が入力されていません。',
+    'Anonymous sign-ins are disabled': 'ログインに失敗しました。',
+    'User already registered': 'このユーザーは既に登録されています。',
+    'Invalid login credentials': 'ログイン情報が誤っています。',
+    'Password should be at least 6 characters': 'パスワードは6文字以上である必要があります。',
+    validation_failed: '入力内容の検証に失敗しました。',
+  };
+
+  // errorTranslations の中から該当するキーワードが含まれているか探す
+  for (const [key, value] of Object.entries(errorTranslations)) {
+    if (errorMessage.includes(key)) {
+      return value; // 見つかったら日本語を返す
+    }
+  }
+
+  // errorTranslations になかった想定外のエラーはそのまま表示
+  return `エラー: ${errorMessage}`;
+};
+
 export const LoginFormApp = () => {
   //1: Formの入力値のstate(メール、パスワード)
   const [formData, setFormData] = useState({
@@ -35,6 +66,9 @@ export const LoginFormApp = () => {
 
   //3: ログイン完了状態のフラグ
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // エラーメッセージのstate
+  const [errorMessage, setErrorMessage] = useState('');
 
   //フォームの入力値変更のイベントハンドラー
   const handleChange = (e) => {
@@ -50,33 +84,67 @@ export const LoginFormApp = () => {
     setShowPassword((prev) => !prev);
   };
 
-  //「ログイン送信」ボタンのイベントハンドラー
-  //【Supabase】に「ログインして！」と通信する
-  const handleSubmit = async (e) => {
+  //「ログイン処理」のイベントハンドラー
+  //【Supabase】に「ログインして！」と通信する。
+  //API通信は非同期処理なので、async awaitを使い通信を待ってから次の行〜 if (error){...} 〜を実行する。
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // 直前のエラーメッセージをリセット
 
     // アラートチェック
-    if (!formData.email || !formData.password) {
-      alert('メールアドレスとパスワードを入力してください');
-      return;
-    }
+    // if (!formData.email || !formData.password) {
+    //   alert('メールアドレスとパスワードを入力してください');
+    //   return;
+    // }
+
     try {
       //🚀【Supabase】に「ログインして！」と通信する
+      //APIを呼び出す。
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
-      //エラーがあったら（メアド間違い、パスワード間違いなど）
+
+      //エラー（メアド間違い、パスワード間違いなど）
       if (error) {
-        alert(`ログイン失敗: ${error.message}`);
+        setErrorMessage(`ログイン失敗: ${translateError(error.message)}`);
         return;
       }
+
       //ログイン成功したら画面を切り替える！
       //アーリーリターン用に「ログイン完了状態のフラグをtrue」にする。
       console.log('ログイン成功データ:', data);
       setIsLoggedIn(true);
     } catch (err) {
-      alert('予期せぬエラーが発生しました');
+      setErrorMessage('予期せぬエラーが発生しました');
+    }
+  };
+
+  //「新規会員登録」サインアップ処理のイベントハンドラー
+  const handleSignup = async (e) => {
+    //APIを呼び出す。
+    e.preventDefault();
+    setErrorMessage(''); // 直前のエラーメッセージをリセット
+
+    try {
+      //🚀【Supabase】の「新規会員登録」サインアップのAPIを呼び出す
+      //APIを呼び出す。
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      //エラー（メアド間違い、パスワード間違いなど）
+      if (error) {
+        setErrorMessage(`新規登録失敗: ${translateError(error.message)}`);
+        return;
+      }
+
+      //⬇︎メール確認設定（Confirm email）がオフの場合はそのままユーザー作成完了！
+      alert('新規登録が完了しました！');
+      //必要に応じてそのままログイン状態に切り替える処理などを追加する。
+    } catch (err) {
+      setErrorMessage('予期せぬエラーが発生しました');
     }
   };
 
@@ -98,7 +166,15 @@ export const LoginFormApp = () => {
       <h2>ログインフォーム</h2>
 
       {/* ⬇︎ログインフォーム初期画面 */}
-      <Login formData={formData} showPassword={showPassword} onChange={handleChange} onTogglePassword={togglePasswordVisibility} onSubmit={handleSubmit} />
+      <Login
+        formData={formData}
+        showPassword={showPassword}
+        errorMessage={errorMessage}
+        onChange={handleChange}
+        onTogglePassword={togglePasswordVisibility}
+        handleLogin={handleLogin}
+        handleSignup={handleSignup}
+      />
       {/* <form onSubmit={handleSubmit} style={{ display: 'block', padding: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
           <label htmlFor='email' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
