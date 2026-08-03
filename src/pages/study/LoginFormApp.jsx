@@ -67,6 +67,9 @@ export const LoginFormApp = () => {
   //3: ログイン完了状態のフラグ
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  //4: UI切り替えのstate(ログインボタンと、新規会員登録ボタンを三項演算子で切り替える)
+  const [uiMode, setUiMode] = useState('login'); // 初期は'login' もしくは 'signup'で切り替える。
+
   // エラーメッセージのstate
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -91,11 +94,11 @@ export const LoginFormApp = () => {
     e.preventDefault();
     setErrorMessage(''); // 直前のエラーメッセージをリセット
 
-    // アラートチェック
-    // if (!formData.email || !formData.password) {
-    //   alert('メールアドレスとパスワードを入力してください');
-    //   return;
-    // }
+    //未入力チェック！
+    if (!formData.email || !formData.password) {
+      setErrorMessage('メールアドレスとパスワードを入力してください');
+      return;
+    }
 
     try {
       //🚀【Supabase】に「ログインして！」と通信する
@@ -120,12 +123,17 @@ export const LoginFormApp = () => {
     }
   };
 
-  //「新規会員登録」サインアップ処理のイベントハンドラー
+  //「新規会員登録の処理」、サインアップ処理のイベントハンドラー
   const handleSignup = async (e) => {
     //APIを呼び出す。
     e.preventDefault();
     setErrorMessage(''); // 直前のエラーメッセージをリセット
 
+    //未入力チェック！
+    if (!formData.email || !formData.password) {
+      setErrorMessage('メールアドレスとパスワードを入力してください');
+      return;
+    }
     try {
       //🚀【Supabase】の「新規会員登録」サインアップのAPIを呼び出す
       //APIを呼び出す。
@@ -141,18 +149,35 @@ export const LoginFormApp = () => {
       }
 
       //⬇︎メール確認設定（Confirm email）がオフの場合はそのままユーザー作成完了！
-      alert('新規登録が完了しました！');
-      //必要に応じてそのままログイン状態に切り替える処理などを追加する。
+      console.log('新規登録成功データ:', data);
+
+      //⬇︎自動でログイン画面モードに戻す！
+      handleUiModeChange();
     } catch (err) {
       setErrorMessage('予期せぬエラーが発生しました');
     }
   };
 
-  //「ログアウト(リセット)」イベントハンドラー
+  //「UI切り替え」のイベントハンドラー
+  const handleUiModeChange = (e) => {
+    if (e) e.preventDefault(); // e.preventDefault(); だけでも全く問題はないが、
+    //if (e) を付けることで、handleUiModeChange()を呼び出す時に「e」が無くてもエラーにならないようにする。
+    //将来的にボタンクリック以外の場所（別の関数の中など）から、引数なしで handleUiModeChange() と直接呼び出す場面があったとします。この場合、eが存在するときだけ実行されるため、直接呼び出してもエラーにならず安全。
+    //■使うケース：新規登録が成功したら、自動でログイン画面に戻したい時など。
+    //ユーザーが新規登録ボタンを押し、登録完了のレスポンスが返ってきた後に、自動で画面を「ログインモード」に切り替えたいという要件が追加されたとします。
+
+    setErrorMessage('');
+
+    //下記にクリックされた時に 'login' ↔ 'signup' を反転させる処理を追加する
+    setUiMode((prev) => (prev === 'login' ? 'signup' : 'login')); //state初期値はloginなので「クリックされた時 prev === 'login'がtrueになので'signup'に切り替わる」処理になる。
+  };
+
+  //「ログアウト(リセット)の処理」のイベントハンドラー
   const handleLogout = () => {
     setFormData({ email: '', password: '' });
     setIsLoggedIn(false);
     setShowPassword(false);
+    setErrorMessage('');
   };
 
   //ログイン成功時は完了画面を返す(アーリーリターン)
@@ -174,6 +199,8 @@ export const LoginFormApp = () => {
         onTogglePassword={togglePasswordVisibility}
         handleLogin={handleLogin}
         handleSignup={handleSignup}
+        uiMode={uiMode} //「UI切り替え」のstate
+        handleUiModeChange={handleUiModeChange} //「UI切り替え」のイベントハンドラー
       />
       {/* <form onSubmit={handleSubmit} style={{ display: 'block', padding: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
