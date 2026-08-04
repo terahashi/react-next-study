@@ -2,22 +2,22 @@
 
 //詳しくは「tech.txtファイル」を参照。
 // 🍎用意するもの
-// 💡1: フロントエンド（画面側）
+// 💡1: フロントエンド(画面側)
 // ・使うもの: React, HTML/CSS など
-// 💡2: バックエンド（APIサーバー）
+// 💡2: バックエンド(APIサーバー)
 // 今回使う➡️Supabase Auth
-// 💡3: データベース（DB）
+// 💡3: データベース(DB)
 // 今回使う➡️Supabase (PostgreSQL)
-// 💡4: 認証の仕組み（鍵のやり取り）
+// 💡4: 認証の仕組み(鍵のやり取り)
 // ・使う技術:
-// JWT（JSON Web Token）: ログイン成功時にサーバーから送られる「デジタル通行証」。React側はこれを受け取って保持しておく。
+// JWT(JSON Web Token): ログイン成功時にサーバーから送られる「デジタル通行証」。React側はこれを受け取って保持しておく。
 
 // 🍎どこでサーバーを動かすの？
-// ・API・DB（バックエンド）を置く場所:
+// ・API・DB(バックエンド)を置く場所:
 // 今回使う➡️Supabase。
 // Supabase 自身が「APIプログラムを動かすサーバー」を最初から用意してくれている！
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient'; // Supabaseの公式ライブラリ
 
 import { Login } from '../../components/study/Login';
@@ -55,7 +55,7 @@ const translateError = (errorMessage) => {
 };
 
 export const LoginFormApp = () => {
-  //1: Formの入力値のstate(メール、パスワード)
+  //1: フォームの入力値のstate(メール、パスワード)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -70,8 +70,51 @@ export const LoginFormApp = () => {
   //4: UI切り替えのstate(ログインボタンと、新規会員登録ボタンを三項演算子で切り替える)
   const [uiMode, setUiMode] = useState('login'); // 初期は'login' もしくは 'signup'で切り替える。
 
+  //5: Supabaseから取得したユーザー情報のstate
+  const [user, setUser] = useState(null);
+
   // エラーメッセージのstate
   const [errorMessage, setErrorMessage] = useState('');
+
+  //ページ読み込み時の「キー情報でのログイン済/否の初回チェック」 ➡️ つまりアプリ起動時・セッション状態の変化を監視する useEffect
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      //⬆︎data: は変数名ではなく、「dataという箱の中身を開けて、session を出してください」 と指定しているのが data: の部分。
+      //⬆︎{ data: { session } } は「分割代入」。Supabaseから返ってきた大きなdataという箱から直接「session(セッション情報)だけを抜き出しています。」
+      //⬆︎supabase.auth.getSession ➡️ ストレージ(保管庫)を見に行き、前回ログインした時の「暗号化されたカードキー(セッション)」が残っているかを取り出すSupabaseの関数です。
+      console.log('🟦 [getSession] sessionの中身:', session);
+      if (session) {
+        //⬆︎ブラウザにカードキー(有効なセッション)が残っていた場合のみ、中身を実行します
+        setUser(session.user); //setUser(session.user) ➡️ セッション内に含まれるユーザー情報(メールアドレスやユーザーIDなど)を Stateにセットする。
+        setIsLoggedIn(true); //ログインフラグをtrueに更新します。これによって画面が再描画されログインフォームではなく LoginSuccess 画面が表示されます。
+      }
+    });
+
+    //キー情報の24時間監視(onAuthStateChange) ➡️ ログイン・ログアウトの変更をリアルタイム監視
+    const {
+      data: { subscription }, //data: は変数名ではなく、「dataという箱の中身を開けて、その中のsubscriptionを出してください」 という指定。
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      //⬆︎onAuthStateChange: Supabaseに「ログイン状態が変わったら、教えて」と監視を命じる関数。
+      //⬆︎_event: 「何が起きたか(SIGNED_IN や SIGNED_OUT)」というイベント名が入ります。(使わない変数なので、慣習的に頭に _ をつける)
+      //⬆︎session: 変化が起きたあとの「セッション情報(カードキー)」
+      console.log('🟥 [onAuthStateChange] イベント名:', _event);
+      console.log('🟥 [onAuthStateChange] sessionの中身:', session);
+
+      if (session) {
+        //ログインしたら ➔ session にデータが入って届く ➔ setIsLoggedIn(true) が動く！
+        setUser(session.user);
+        setIsLoggedIn(true);
+      } else {
+        //ログアウトしたら ➔ session が null で届く ➔ setIsLoggedIn(false) が動く！
+        setUser(null);
+        setIsLoggedIn(false);
+      }
+    });
+    console.log('🟩 [subscription] リモコンの中身:', subscription);
+
+    // ⬇︎クリーンアップ処理(画面が閉じられたら「監視カメラ(onAuthStateChange)」の電源を切る処理)
+    return () => subscription.unsubscribe();
+  }, []);
 
   //フォームの入力値変更のイベントハンドラー
   const handleChange = (e) => {
@@ -108,7 +151,7 @@ export const LoginFormApp = () => {
         password: formData.password,
       });
 
-      //エラー（メアド間違い、パスワード間違いなど）
+      //エラー(メアド間違い、パスワード間違いなど)
       if (error) {
         setErrorMessage(`ログイン失敗: ${translateError(error.message)}`);
         return;
@@ -142,13 +185,13 @@ export const LoginFormApp = () => {
         password: formData.password,
       });
 
-      //エラー（メアド間違い、パスワード間違いなど）
+      //エラー(メアド間違い、パスワード間違いなど)
       if (error) {
         setErrorMessage(`新規登録失敗: ${translateError(error.message)}`);
         return;
       }
 
-      //⬇︎メール確認設定（Confirm email）がオフの場合はそのままユーザー作成完了！
+      //⬇︎メール確認設定(Confirm email)がオフの場合はそのままユーザー作成完了！
       console.log('新規登録成功データ:', data);
 
       //⬇︎自動でログイン画面モードに戻す！
@@ -162,7 +205,7 @@ export const LoginFormApp = () => {
   const handleUiModeChange = (e) => {
     if (e) e.preventDefault(); // e.preventDefault(); だけでも全く問題はないが、
     //if (e) を付けることで、handleUiModeChange()を呼び出す時に「e」が無くてもエラーにならないようにする。
-    //将来的にボタンクリック以外の場所（別の関数の中など）から、引数なしで handleUiModeChange() と直接呼び出す場面があったとします。この場合、eが存在するときだけ実行されるため、直接呼び出してもエラーにならず安全。
+    //将来的にボタンクリック以外の場所(別の関数の中など)から、引数なしで handleUiModeChange() と直接呼び出す場面があったとします。この場合、eが存在するときだけ実行されるため、直接呼び出してもエラーにならず安全。
     //■使うケース：新規登録が成功したら、自動でログイン画面に戻したい時など。
     //ユーザーが新規登録ボタンを押し、登録完了のレスポンスが返ってきた後に、自動で画面を「ログインモード」に切り替えたいという要件が追加されたとします。
 
@@ -173,9 +216,14 @@ export const LoginFormApp = () => {
   };
 
   //「ログアウト(リセット)の処理」のイベントハンドラー
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    //⬇︎Supabaseのストレージ(保管庫)からカードキーを消す
+    await supabase.auth.signOut();
+
+    //⬇︎見た目(State)をリセットする
     setFormData({ email: '', password: '' });
     setIsLoggedIn(false);
+    setUser(null); // ユーザー情報をnullにする
     setShowPassword(false);
     setErrorMessage('');
   };
