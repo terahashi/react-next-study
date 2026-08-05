@@ -230,15 +230,38 @@ export const LoginFormApp = () => {
 
   //ログイン成功時は完了画面を返す(アーリーリターン)
   if (isLoggedIn) {
-    return <LoginSuccess email={formData.email} onReset={handleLogout} />;
+    //LoginSuccess.jsxを呼び出す
+    return <LoginSuccess email={formData.email} user={user} onReset={handleLogout} />;
   }
 
   //JSX「ログインフォーム」
   return (
     <div style={{ padding: '20px', margin: '0 auto' }}>
       <h2>ログインフォーム</h2>
+      <div
+        style={{
+          backgroundColor: '#eaf2f8',
+          padding: '12px 16px',
+          borderRadius: '6px',
+          marginBottom: '20px',
+          fontSize: '14px',
+          lineHeight: '1.6',
+          color: '#1c3d5a',
+        }}
+      >
+        <strong>💡 動作確認用のアカウント情報</strong>
+        <br />
+        <strong>【ログインを試したい場合（テスト用）】</strong>
+        <br />
+        メールアドレス: <code>test00@example.com</code>
+        <br />
+        パスワード: <code>Test_25269123Pass</code>
+        <br />
+        <span>※「新規登録ボタン」で自由なメールアドレス・パスワードで登録も可能。</span>
+      </div>
 
       {/* ⬇︎ログインフォーム初期画面 */}
+      {/* Login.jsxを表示するコンポーネントを呼び出す */}
       <Login
         formData={formData}
         showPassword={showPassword}
