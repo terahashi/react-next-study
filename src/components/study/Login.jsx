@@ -43,7 +43,7 @@ export const Login = ({ formData, showPassword, errorMessage, onChange, onToggle
 
           {/* 「パスワードを目視」する用の表示・非表示の切り替え */}
           <button type='button' onClick={onTogglePassword} style={{ whiteSpace: 'nowrap', cursor: 'pointer' }}>
-            {showPassword ? 'pass非表示' : '👁️'}
+            {showPassword ? 'pass非表示' : 'pass表示'}
           </button>
         </div>
 

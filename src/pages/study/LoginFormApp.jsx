@@ -249,7 +249,7 @@ export const LoginFormApp = () => {
           color: '#1c3d5a',
         }}
       >
-        <strong>💡 動作確認用のアカウント情報</strong>
+        <strong>■動作確認用のアカウント情報</strong>
         <br />
         <strong>【ログインを試したい場合（テスト用）】</strong>
         <br />
@@ -258,6 +258,8 @@ export const LoginFormApp = () => {
         パスワード: <code>Test_25269123Pass</code>
         <br />
         <span>※「新規登録ボタン」で自由なメールアドレス・パスワードで登録も可能。</span>
+        <br />
+        <strong>このアプリは「React × ⚡️Supabase」を使用して作成しています。</strong>
       </div>
 
       {/* ⬇︎ログインフォーム初期画面 */}
