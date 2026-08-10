@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 
 export const LoginSuccess = ({ email, user, onReset }) => {
-  //React手元で管理するメモ一覧のState(Supabaseの'memosテーブル'と区別するために memoList に命名)
+  //手元で表示するメモ一覧のStateです。(理由:Supabaseの"memosテーブル"と区別するために"memoList"に命名)
   const [memoList, setMemoList] = useState([]);
 
   //入力中のメモテキストを保持するstate
@@ -13,6 +13,10 @@ export const LoginSuccess = ({ email, user, onReset }) => {
   //ローディング状態とエラーメッセージ
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  //💡「メモを再編集するため」のState
+  const [editingMemoId, setEditingMemoId] = useState(null); // タップしたときに編集モードを開始するためのstate。つまり編集中のメモのID（初期値: null）
+  const [editText, setEditText] = useState(''); // 編集中のメモのテキスト（初期値: 空文字）
 
   // ⬇︎画面表示時に「自分のメモ一覧」を【Supabaseから取得する】
   //役割: memoList(State)を「setMemoListで更新するためだけの関数」です。
@@ -66,6 +70,46 @@ export const LoginSuccess = ({ email, user, onReset }) => {
     } catch (err) {
       console.error('メモ保存エラー:', err);
       setErrorMsg('メモの保存に失敗しました。');
+    }
+  };
+
+  //💡タップしたときに編集モードを開始する関数
+  const handleStartEditing = (memo) => {
+    setEditingMemoId(memo.id); //編集中のメモIDをセット
+    setEditText(memo.content); //編集用のテキストをセット
+  };
+
+  // 💡(編集モードで)Enterキーを押すと送信/更新される(UXを使いやすくするために作成)
+  const handleKeyDown = (e, id) => {
+    // Enterキーが押された、かつ Shiftキーが押されていない場合（※単体Enterで送信）
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // 改行されるデフォルトの動きを防止
+      handleUpdateMemo(id); // 更新処理を実行！
+    }
+  };
+
+  // メモ更新(Update)する処理
+  const handleUpdateMemo = async (id) => {
+    if (!editText.trim()) return; // 空文字は無効
+
+    try {
+      //supabaseのデータを更新する処理
+      const { error } = await supabase
+        .from('memos') // supabaseの「memosテーブルを指定」
+        .update({ content: editText }) // 更新する内容を指定
+        .eq('id', id); //idが一致するものを更新
+
+      if (error) throw error; // エラーがあればthrowでcatchに飛ばす
+
+      //画面(state)のデータも更新
+      setMemoList((prev) => prev.map((item) => (item.id === id ? { ...item, content: editText } : item)));
+
+      //編集モードを解除
+      setEditingMemoId(null); //編集中のメモIDをリセット
+      setEditText(''); //編集用のテキストをリセット
+    } catch (err) {
+      console.error('メモ更新エラー:', err);
+      setErrorMsg('メモの更新に失敗しました。');
     }
   };
 
@@ -151,28 +195,73 @@ export const LoginSuccess = ({ email, user, onReset }) => {
         {errorMsg && <p style={{ color: '#dc3545', fontSize: '13px', backgroundColor: '#f8d7da', padding: '8px', borderRadius: '4px' }}>{errorMsg}</p>}
 
         {/* ⬇︎メモ入力フォーム 「手元のmemoList(State)に追加する」 */}
-        <form onSubmit={handleAddMemo}>
-          <h2>⚡️今日のひとこと　メモ機能</h2>
-          <p>(空文字は無効です)</p>
+        <div style={{ marginBottom: '50px' }}>
+          <h2>⚡️今日のひとこと / メモ機能</h2>
+          <p style={{ textAlign: 'left' }}>※空文字は無効です。</p>
+          <p style={{ textAlign: 'left' }}>※メモをクリックすると「編集モード」になります</p>
+        </div>
+
+        {/* ⬇︎メモ一覧の結果表示 */}
+        <div style={{ marginBottom: '50px' }}>
+          {loading ? (
+            <h3>読み込み中...</h3>
+          ) : memoList.length === 0 ? (
+            <p>保存されたメモはまだありません。</p>
+          ) : (
+            <ul>
+              {memoList.map((memo) => (
+                <li key={memo.id} style={{ listStyleType: 'none' }}>
+                  {/* ②編集モード（editingMemoId === memo.id）なら input に化ける！ */}
+                  {editingMemoId === memo.id ? (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '10px' }}>
+                      {/* contentEditable を使うと、<span> や <div> の見た目・サイズのまま、直接文字を入力・編集できる */}
+                      <div
+                        contentEditable
+                        suppressContentEditableWarning
+                        onInput={(e) => setEditText(e.currentTarget.textContent)}
+                        onKeyDown={(e) => handleKeyDown(e, memo.id)} //Enterキーでの自動更新を判定する関数
+                        autoFocus
+                        style={{
+                          borderBottom: '2px solid #007bff',
+                          padding: '8px',
+                          outline: 'none',
+                          minHeight: '1.5em', // 空になっても高さが潰れないようにする
+                          whiteSpace: 'pre-wrap', // 改行などもそのまま綺麗に見せる
+                        }}
+                      >
+                        {memo.content}
+                      </div>
+                      <button onClick={() => handleUpdateMemo(memo.id)}>更新 </button>
+                      <button onClick={() => setEditingMemoId(null)}>取消</button>
+                    </div>
+                  ) : (
+                    /* ①初期表示。クリックすると「handleStartEditingイベント」でメモ編集に切り替わる */
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0 20px', marginBottom: '10px' }}>
+                      <span
+                        onClick={() => handleStartEditing(memo)}
+                        style={{
+                          padding: '8px',
+                          borderBottom: '2px solid #707070',
+
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {memo.content}
+                      </span>
+                      <button onClick={() => handleDeleteMemo(memo.id)}>削除</button>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* ⬇︎メモ入力フォーム 「手元のmemoList(State)に追加する」 */}
+        <form onSubmit={handleAddMemo} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '10px' }}>
           <input type='text' value={newMemo} onChange={(e) => setNewMemo(e.target.value)} placeholder='新しいメモを入力' />
           <button type='submit'>追加</button>
         </form>
-
-        {/* ⬇︎メモ一覧の結果表示 */}
-        {loading ? (
-          <p>読み込み中...</p>
-        ) : memoList.length === 0 ? (
-          <p>保存されたメモはまだありません。</p>
-        ) : (
-          <ul>
-            {memoList.map((memo) => (
-              <li key={memo.id}>
-                <span>{memo.content}</span>
-                <button onClick={() => handleDeleteMemo(memo.id)}>削除</button>
-              </li>
-            ))}
-          </ul>
-        )}
       </main>
     </div>
   );
