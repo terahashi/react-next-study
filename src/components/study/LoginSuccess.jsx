@@ -2,6 +2,7 @@
 //ログイン成功時の「完了画面」です。
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import { memoServiceSupabase } from '../../lib/memoServiceSupabase';
 
 export const LoginSuccess = ({ email, user, onReset }) => {
   //手元で表示するメモ一覧のStateです。(理由:Supabaseの"memosテーブル"と区別するために"memoList"に命名)
@@ -18,21 +19,37 @@ export const LoginSuccess = ({ email, user, onReset }) => {
   const [editingMemoId, setEditingMemoId] = useState(null); // タップしたときに編集モードを開始するためのstate。つまり編集中のメモのID（初期値: null）
   const [editText, setEditText] = useState(''); // 編集中のメモのテキスト（初期値: 空文字）
 
-  // ⬇︎画面表示時に「自分のメモ一覧」を【Supabaseから取得する】
+  // //モジュール化前のコード。
+  // // ⬇︎1:画面表示時に「自分のメモ一覧」を【Supabaseから取得する】
+  // //役割: memoList(State)を「setMemoListで更新するためだけの関数」です。
+  // const fetchMemos = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     // Supabaseの「memos」テーブルから、ログイン中のユーザーのメモを取得する
+  //     const { data, error } = await supabase
+  //       .from('memos') // ① supabaseの「memosテーブルを指定」
+  //       .select('*') // ② 全ての列を取得
+  //       .order('created_at', { ascending: false }); // ③ 作成日時が新しい順に並べ替え
+
+  //     if (error) throw error;
+  //     setMemoList(data || []); // ④ 取得したメモ一覧をStateに保存。「 data または [空の配列] 」をセット。
+  //     //⬆︎ [空の配列]を入れる理由は、「dataがnullや、undefinedだったときに、画面(React)がクラッシュする(画面が真っ白になる)のを防ぐため。」
+  //   } catch (err) {
+  //     console.error('メモ取得エラー:', err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // ⬇︎1:画面表示時に「自分のメモ一覧」を【Supabaseから取得する】
   //役割: memoList(State)を「setMemoListで更新するためだけの関数」です。
   const fetchMemos = async () => {
     try {
       setLoading(true);
-
       // Supabaseの「memos」テーブルから、ログイン中のユーザーのメモを取得する
-      const { data, error } = await supabase
-        .from('memos') // ① supabaseの「memosテーブルを指定」
-        .select('*') // ② 全ての列を取得
-        .order('created_at', { ascending: false }); // ③ 作成日時が新しい順に並べ替え
-
-      if (error) throw error;
-      setMemoList(data || []); // ④ 取得したメモ一覧をStateに保存。「 data または [空の配列] 」をセット。
-      //⬆︎ [空の配列]を入れる理由は、「dataがnullや、undefinedだったときに、画面(React)がクラッシュする(画面が真っ白になる)のを防ぐため。」
+      const data = await memoServiceSupabase.fetchMemos();
+      setMemoList(data); // ④ 取得したメモ一覧をStateに保存。「 data 」をセット。
     } catch (err) {
       console.error('メモ取得エラー:', err);
     } finally {
@@ -45,7 +62,36 @@ export const LoginSuccess = ({ email, user, onReset }) => {
     fetchMemos();
   }, []);
 
-  //⬇︎新しいメモを【Supabaseに保存し、手元のmemoList(State)に追加する関数】
+  // //モジュール化前のコード。
+  // //⬇︎2:新しいメモを【Supabaseに保存し、手元のmemoList(State)に追加する関数】
+  // const handleAddMemo = async (e) => {
+  //   e.preventDefault(); //ページリロードを防ぐ
+  //   if (!newMemo.trim()) return;
+  //   // ⬆︎メモの入力欄が空(またはスペースだけ)の場合、
+  //   // ⬆︎JavaScriptでは、空文字""はfalse(偽)になるので【!(否定)をつけてtrue(真)にして、returnで処理を終了する】という意味。
+
+  //   try {
+  //     //Supabaseにデータを挿入(user_idにはログイン中ユーザーのIDを渡す)
+  //     const { data, error } = await supabase
+  //       .from('memos') //① supabaseの「memosテーブルを指定」
+  //       .insert([{ content: newMemo, user_id: user.id }]) //② 新しいメモを挿入
+  //       .select(); //③ 挿入後のデータを取得
+
+  //     if (error) throw error; // エラーがあればthrowでcatchに飛ばす
+
+  //     // 保存できたら手元のState(memoList)の先頭に「新メモを追加する。」
+  //     setMemoList((prev) => [data[0], ...prev]);
+  //     //⬆︎ prev ＝ 更新直前の memos(現在画面に保持されているメモ一覧の配列)。
+  //     //⬆︎ ...prev ＝ 画面に今まで表示されていた 「過去のメモたち」(... で中身をサッと広げています)
+  //     //⬆︎ [data[0], ...prev] ＝ 「新しいメモを一番先頭にして、その後に過去のメモを繋げた新しい配列」 を作成
+  //     setNewMemo(''); //入力欄を空にする
+  //   } catch (err) {
+  //     console.error('メモ保存エラー:', err);
+  //     setErrorMsg('メモの保存に失敗しました。');
+  //   }
+  // };
+
+  //⬇︎2:新しいメモを【Supabaseに保存し、手元のmemoList(State)に追加する関数】
   const handleAddMemo = async (e) => {
     e.preventDefault(); //ページリロードを防ぐ
     if (!newMemo.trim()) return;
@@ -54,18 +100,12 @@ export const LoginSuccess = ({ email, user, onReset }) => {
 
     try {
       //Supabaseにデータを挿入(user_idにはログイン中ユーザーのIDを渡す)
-      const { data, error } = await supabase
-        .from('memos') //① supabaseの「memosテーブルを指定」
-        .insert([{ content: newMemo, user_id: user.id }]) //② 新しいメモを挿入
-        .select(); //③ 挿入後のデータを取得
-
-      if (error) throw error; // エラーがあればthrowでcatchに飛ばす
-
+      const newMemoData = await memoServiceSupabase.handleAddMemo(newMemo, user.id);
       // 保存できたら手元のState(memoList)の先頭に「新メモを追加する。」
-      setMemoList((prev) => [data[0], ...prev]);
+      setMemoList((prev) => [newMemoData, ...prev]);
       //⬆︎ prev ＝ 更新直前の memos(現在画面に保持されているメモ一覧の配列)。
       //⬆︎ ...prev ＝ 画面に今まで表示されていた 「過去のメモたち」(... で中身をサッと広げています)
-      //⬆︎ [data[0], ...prev] ＝ 「新しいメモを一番先頭にして、その後に過去のメモを繋げた新しい配列」 を作成
+      //⬆︎ [newMemoData, ...prev] ＝ 「新しいメモを一番先頭にして、その後に過去のメモを繋げた新しい配列」 を作成
       setNewMemo(''); //入力欄を空にする
     } catch (err) {
       console.error('メモ保存エラー:', err);
@@ -88,18 +128,39 @@ export const LoginSuccess = ({ email, user, onReset }) => {
     }
   };
 
-  // メモ更新(Update)する処理
+  // //モジュール化前のコード。
+  // // ⬇︎3:メモ更新(Update)する処理
+  // const handleUpdateMemo = async (id) => {
+  //   if (!editText.trim()) return; // 空文字は無効
+
+  //   try {
+  //     //supabaseのデータを更新する処理
+  //     const { error } = await supabase
+  //       .from('memos') // supabaseの「memosテーブルを指定」
+  //       .update({ content: editText }) // 更新する内容を指定
+  //       .eq('id', id); //idが一致するものを更新
+
+  //     if (error) throw error; // エラーがあればthrowでcatchに飛ばす
+
+  //     //画面(state)のデータも更新
+  //     setMemoList((prev) => prev.map((item) => (item.id === id ? { ...item, content: editText } : item)));
+
+  //     //編集モードを解除
+  //     setEditingMemoId(null); //編集中のメモIDをリセット
+  //     setEditText(''); //編集用のテキストをリセット
+  //   } catch (err) {
+  //     console.error('メモ更新エラー:', err);
+  //     setErrorMsg('メモの更新に失敗しました。');
+  //   }
+  // };
+
+  // ⬇︎3:メモ更新(Update)する処理
   const handleUpdateMemo = async (id) => {
     if (!editText.trim()) return; // 空文字は無効
 
     try {
       //supabaseのデータを更新する処理
-      const { error } = await supabase
-        .from('memos') // supabaseの「memosテーブルを指定」
-        .update({ content: editText }) // 更新する内容を指定
-        .eq('id', id); //idが一致するものを更新
-
-      if (error) throw error; // エラーがあればthrowでcatchに飛ばす
+      await memoServiceSupabase.handleUpdateMemo(id, editText);
 
       //画面(state)のデータも更新
       setMemoList((prev) => prev.map((item) => (item.id === id ? { ...item, content: editText } : item)));
@@ -113,15 +174,30 @@ export const LoginSuccess = ({ email, user, onReset }) => {
     }
   };
 
-  //⬇︎メモを削除する関数 (Delete)
+  // //モジュール化前のコード。
+  // //⬇︎4:メモを削除する関数 (Delete)
+  // const handleDeleteMemo = async (id) => {
+  //   try {
+  //     const { error } = await supabase
+  //       .from('memos') //① supabaseの「memosテーブルを指定」
+  //       .delete() //② 削除する
+  //       .eq('id', id); //③ idが一致するものを削除
+
+  //     if (error) throw error; // エラーがあればthrowでcatchに飛ばす
+
+  //     // 削除できたら手元のState(memoList)からも削除する
+  //     setMemoList((prev) => prev.filter((memo) => memo.id !== id));
+  //   } catch (err) {
+  //     console.error('メモ削除エラー:', err);
+  //     setErrorMsg('メモの削除に失敗しました。');
+  //   }
+  // };
+
+  //⬇︎4:メモを削除する関数 (Delete)
   const handleDeleteMemo = async (id) => {
     try {
-      const { error } = await supabase
-        .from('memos') //① supabaseの「memosテーブルを指定」
-        .delete() //② 削除する
-        .eq('id', id); //③ idが一致するものを削除
-
-      if (error) throw error; // エラーがあればthrowでcatchに飛ばす
+      //supabaseのデータを削除する処理
+      await memoServiceSupabase.handleDeleteMemo(id);
 
       // 削除できたら手元のState(memoList)からも削除する
       setMemoList((prev) => prev.filter((memo) => memo.id !== id));
@@ -260,7 +336,7 @@ export const LoginSuccess = ({ email, user, onReset }) => {
         {/* ⬇︎メモ入力フォーム 「手元のmemoList(State)に追加する」 */}
         <form onSubmit={handleAddMemo} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '10px' }}>
           <input type='text' value={newMemo} onChange={(e) => setNewMemo(e.target.value)} placeholder='新しいメモを入力' />
-          <button type='submit'>追加</button>
+          <button type='submit'>追加する</button>
         </form>
       </main>
     </div>
