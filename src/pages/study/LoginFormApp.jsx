@@ -20,8 +20,32 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient'; // Supabaseの公式ライブラリ
 
+//styled-components
+//createGlobalStyleとは「body など、アプリ全体に適用するCSSを作成する機能」
+import styled, { createGlobalStyle } from 'styled-components';
+
 import { Login } from '../../components/study/Login';
 import { LoginSuccess } from '../../components/study/LoginSuccess';
+
+// このログインアプリだけに「bodyタグ専用のグローバルスタイル」を定義
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #f1f1f1;
+    color: #333333;
+    margin: 0;
+  }
+  /* Viteのデフォルトダークモードを打ち消す */
+  input, select, textarea {
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #ced4da;
+  }
+`;
+
+// ログインアプリ全体の背景（画面の高さいっぱいに薄いグレーを敷く）
+const AppContainer = styled.div`
+  background-color: #f1f1f1;
+`;
 
 // エラーの日本語化：ログインや新規登録で表示される「Supabaseの英語エラー」を日本語に変換する関数を作成
 const translateError = (errorMessage) => {
@@ -230,52 +254,63 @@ export const LoginFormApp = () => {
 
   //ログイン成功時は完了画面を返す(アーリーリターン)
   if (isLoggedIn) {
-    //LoginSuccess.jsxを呼び出す
-    return <LoginSuccess email={formData.email} user={user} onReset={handleLogout} />;
+    return (
+      <>
+        <GlobalStyle />
+
+        <AppContainer>
+          <LoginSuccess email={formData.email} user={user} onReset={handleLogout} />;
+        </AppContainer>
+      </>
+    );
   }
 
   //JSX「ログインフォーム」
   return (
-    <div style={{ padding: '20px', margin: '0 auto' }}>
-      <h2>ログインフォーム</h2>
-      <div
-        style={{
-          backgroundColor: '#eaf2f8',
-          padding: '12px 16px',
-          borderRadius: '6px',
-          marginBottom: '20px',
-          fontSize: '14px',
-          lineHeight: '1.6',
-          color: '#1c3d5a',
-        }}
-      >
-        <strong>■動作確認用のアカウント情報</strong>
-        <br />
-        <strong>【ログインを試したい場合（テスト用）】</strong>
-        <br />
-        メールアドレス: <code>test00@example.com</code>
-        <br />
-        パスワード: <code>Test_25269123Pass</code>
-        <br />
-        <span>※「新規登録ボタン」で自由なメールアドレス・パスワードで登録も可能。</span>
-        <br />
-        <strong>このアプリは「React × ⚡️Supabase」を使用して作成しています。</strong>
-      </div>
+    <>
+      {' '}
+      <GlobalStyle />
+      <AppContainer>
+        <div style={{ padding: '20px', margin: '0 auto' }}>
+          <h2>ログインフォーム</h2>
+          <div
+            style={{
+              backgroundColor: '#d5e9f9',
+              padding: '12px 16px',
+              borderRadius: '6px',
+              marginBottom: '20px',
+              fontSize: '14px',
+              lineHeight: '1.6',
+              color: '#1c3d5a',
+            }}
+          >
+            <strong>■動作確認用のアカウント情報</strong>
+            <br />
+            <strong>【ログインを試したい場合（テスト用）】</strong>
+            <br />
+            メールアドレス: <code>test00@example.com</code>
+            <br />
+            パスワード: <code>Test_25269123Pass</code>
+            <br />
+            <span>※「新規登録ボタン」で自由なメールアドレス・パスワードで登録も可能。</span>
+            <br />
+            <strong>このアプリは「React × ⚡️Supabase」を使用して作成しています。</strong>
+          </div>
 
-      {/* ⬇︎ログインフォーム初期画面 */}
-      {/* Login.jsxを表示するコンポーネントを呼び出す */}
-      <Login
-        formData={formData}
-        showPassword={showPassword}
-        errorMessage={errorMessage}
-        onChange={handleChange}
-        onTogglePassword={togglePasswordVisibility}
-        handleLogin={handleLogin}
-        handleSignup={handleSignup}
-        uiMode={uiMode} //「UI切り替え」のstate
-        handleUiModeChange={handleUiModeChange} //「UI切り替え」のイベントハンドラー
-      />
-      {/* <form onSubmit={handleSubmit} style={{ display: 'block', padding: '20px' }}>
+          {/* ⬇︎ログインフォーム初期画面 */}
+          {/* Login.jsxを表示するコンポーネントを呼び出す */}
+          <Login
+            formData={formData}
+            showPassword={showPassword}
+            errorMessage={errorMessage}
+            onChange={handleChange}
+            onTogglePassword={togglePasswordVisibility}
+            handleLogin={handleLogin}
+            handleSignup={handleSignup}
+            uiMode={uiMode} //「UI切り替え」のstate
+            handleUiModeChange={handleUiModeChange} //「UI切り替え」のイベントハンドラー
+          />
+          {/* <form onSubmit={handleSubmit} style={{ display: 'block', padding: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
           <label htmlFor='email' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
             メールアドレス:
@@ -326,6 +361,8 @@ export const LoginFormApp = () => {
           ログイン
         </button>
       </form> */}
-    </div>
+        </div>
+      </AppContainer>
+    </>
   );
 };
