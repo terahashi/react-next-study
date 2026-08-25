@@ -259,7 +259,7 @@ export const LoginFormApp = () => {
         <GlobalStyle />
 
         <AppContainer>
-          <LoginSuccess email={formData.email} user={user} onReset={handleLogout} />;
+          <LoginSuccess user={user} onReset={handleLogout} />
         </AppContainer>
       </>
     );
