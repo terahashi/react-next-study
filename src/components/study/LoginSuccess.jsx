@@ -1,10 +1,74 @@
 //LoginFormApp.jsxから責務分離
 //ログイン成功時の「完了画面」です。
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+// import { supabase } from '../../lib/supabaseClient';
 import { memoServiceSupabase } from '../../lib/memoServiceSupabase';
 
-export const LoginSuccess = ({ email, user, onReset }) => {
+import styled from 'styled-components';
+
+//「プロフィールカード」全体のコンテナ
+const Card = styled.div`
+  max-width: 450px;
+  margin: 40px auto 100px;
+  padding: 30px 30px 60px;
+  border-radius: 12px;
+  box-shadow: 5px 20px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+`;
+
+//「プロフィールカード」のタイトル
+const Title = styled.h2`
+  margin-top: 10px;
+  margin-bottom: 30px;
+  font-size: 20px;
+`;
+
+//「プロフィールカード」の全体
+const UserInfoBox = styled.div`
+  background-color: #d5e9f9;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  text-align: left;
+  padding: 20px;
+`;
+
+//「プロフィールカード」のログイン中のメールアドレスの文字装飾エリア
+const LoginEmailArea = styled.div`
+  margin-bottom: 30px;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+`;
+
+const Label = styled.span`
+  display: block;
+  font-size: 16px;
+`;
+const Value = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  word-break: break-all;
+`;
+
+//ログアウトボタンの装飾
+const LogOutButton = styled.button`
+  background-color: #0647a3;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px; /* 上下左右の余白を調整 */
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap; /* 改行を防ぐ */
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #1759b5;
+  }
+`;
+
+export const LoginSuccess = ({ user, onReset }) => {
   //手元で表示するメモ一覧のStateです。(理由:Supabaseの"memosテーブル"と区別するために"memoList"に命名)
   const [memoList, setMemoList] = useState([]);
 
@@ -220,52 +284,31 @@ export const LoginSuccess = ({ email, user, onReset }) => {
         }}
       >
         <h2 style={{ margin: 0 }}>マイページ</h2>
-        <button
-          onClick={onReset}
-          style={{
-            padding: '4px 8px',
-            fontSize: '14px',
-            lineHeight: '1',
-            height: '36px',
-            backgroundColor: '#6c757d',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
-          ログアウト
-        </button>
+        <LogOutButton onClick={onReset}>ログアウト</LogOutButton>
       </header>
 
       {/* メインコンテンツ*/}
       <main>
         {/* ⬇︎(ユーザー情報カード)  */}
-        <h3
-          style={{
-            marginBottom: '70px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px', // ここで全体のすき間を調整！
-          }}
-        >
-          <span>おかえりなさい！</span>
-          <span>{user?.email}さん。</span>
-        </h3>
+        <Card>
+          <Title>
+            <span>おかえりなさい！{user?.email}さん。</span>
+          </Title>
 
-        <div style={{ marginBottom: '100px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <label>✅ログイン中のメールアドレス</label>
-            {/* user?.email で Supabase から届いたメールアドレスを表示 */}
-            <p>{user?.email}</p>
-          </div>
+          <UserInfoBox>
+            <LoginEmailArea>
+              <Label>✅ログイン中のメールアドレス</Label>
+              {/* user?.email で Supabase から届いたメールアドレスを表示 */}
+              <Value>{user?.email}</Value>
+            </LoginEmailArea>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <label>✅ユーザー固有ID(UUID)</label>
-            {/* user?.id で Supabase が発行した固有IDを表示 */}
-            <p>{user?.id}</p>
-          </div>
-        </div>
+            <LoginEmailArea>
+              <Label>✅ユーザー固有ID(UUID)</Label>
+              {/* user?.id で Supabase が発行した固有IDを表示 */}
+              <Value>{user?.id}</Value>
+            </LoginEmailArea>
+          </UserInfoBox>
+        </Card>
 
         {/* ⬇︎エラー表示 */}
         {errorMsg && <p style={{ color: '#dc3545', fontSize: '13px', backgroundColor: '#f8d7da', padding: '8px', borderRadius: '4px' }}>{errorMsg}</p>}
@@ -318,7 +361,6 @@ export const LoginSuccess = ({ email, user, onReset }) => {
                         style={{
                           padding: '8px',
                           borderBottom: '2px solid #707070',
-
                           cursor: 'pointer',
                         }}
                       >
@@ -335,7 +377,18 @@ export const LoginSuccess = ({ email, user, onReset }) => {
 
         {/* ⬇︎メモ入力フォーム 「手元のmemoList(State)に追加する」 */}
         <form onSubmit={handleAddMemo} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '10px' }}>
-          <input type='text' value={newMemo} onChange={(e) => setNewMemo(e.target.value)} placeholder='新しいメモを入力' />
+          <input
+            type='text'
+            value={newMemo}
+            onChange={(e) => setNewMemo(e.target.value)}
+            placeholder='新しいメモを入力'
+            style={{
+              padding: '8px',
+              outline: 'none',
+              minHeight: '1.5em', // 空になっても高さが潰れないようにする
+              whiteSpace: 'pre-wrap', // 改行などもそのまま綺麗に見せる
+            }}
+          />
           <button type='submit'>追加する</button>
         </form>
       </main>
