@@ -1,6 +1,25 @@
 //LoginFormApp.jsxから責務分離
 //ログインフォーム初期画面
 
+import styled from 'styled-components';
+
+//ログインとパスワード欄のflex調整
+const FlexContainer = styled.div`
+  display: block;
+  margin-bottom: 20px;
+`;
+
+//「パスワードを目視」する用の表示・非表示の切り替えの調整
+const TogglePasswordButton = styled.button`
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0.4em 0.6em;
+  margin-top: 10px;
+  /* @media (min-width: 768px) {
+
+  } */
+`;
+
 export const Login = ({ formData, showPassword, errorMessage, onChange, onTogglePassword, handleLogin, handleSignup, uiMode, handleUiModeChange }) => {
   //⬇︎現在が「ログインモード」か「新規登録モード」かを判定する関数(true: ログイン / false: 新規登録）
   const isLoginMode = uiMode === 'login'; // uiModeが'login'ならtrue、'signup'ならfalseを返す。
@@ -10,7 +29,7 @@ export const Login = ({ formData, showPassword, errorMessage, onChange, onToggle
       {/* //⬇︎isLoginModeが「trueならログインモード」、「falseなら新規登録モード」のフォームを表示する */}
       <form onSubmit={isLoginMode ? handleLogin : handleSignup}>
         {/* メールアドレス */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+        <FlexContainer>
           <label htmlFor='email' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
             メールアドレス:
           </label>
@@ -24,9 +43,9 @@ export const Login = ({ formData, showPassword, errorMessage, onChange, onToggle
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
             autoComplete='email'
           />
-        </div>
+        </FlexContainer>
         {/* パスワード入力欄 */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+        <FlexContainer>
           <label htmlFor='password' style={{ whiteSpace: 'nowrap', flexShrink: 0, display: 'block', marginRight: '10px' }}>
             パスワード:
           </label>
@@ -42,10 +61,10 @@ export const Login = ({ formData, showPassword, errorMessage, onChange, onToggle
           />
 
           {/* 「パスワードを目視」する用の表示・非表示の切り替え */}
-          <button type='button' onClick={onTogglePassword} style={{ whiteSpace: 'nowrap', cursor: 'pointer' }}>
+          <TogglePasswordButton type='button' onClick={onTogglePassword}>
             {showPassword ? 'pass非表示' : 'pass表示'}
-          </button>
-        </div>
+          </TogglePasswordButton>
+        </FlexContainer>
 
         {/* エラーメッセージがある場合は表示する */}
         {errorMessage && <p style={{ color: 'red', marginBottom: '15px' }}>{errorMessage}</p>}

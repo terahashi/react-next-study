@@ -68,6 +68,38 @@ const LogOutButton = styled.button`
   }
 `;
 
+//追加ボタンをプラスマーク(+)
+const AddButtonPlus = styled.button`
+  background-color: #2460a0;
+  color: #d4e1fe;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+
+  align-self: center;
+
+  padding: 0;
+  line-height: 0;
+  box-sizing: border-box;
+
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span {
+    display: inline-block;
+    line-height: 1;
+  }
+  cursor: pointer;
+  &:hover {
+    background-color: #074870;
+  }
+`;
+
 export const LoginSuccess = ({ user, onReset }) => {
   //手元で表示するメモ一覧のStateです。(理由:Supabaseの"memosテーブル"と区別するために"memoList"に命名)
   const [memoList, setMemoList] = useState([]);
@@ -272,7 +304,7 @@ export const LoginSuccess = ({ user, onReset }) => {
   };
 
   return (
-    <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
+    <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
       {/* ⬇︎ヘッダー */}
       <header
         style={{
@@ -376,7 +408,7 @@ export const LoginSuccess = ({ user, onReset }) => {
         </div>
 
         {/* ⬇︎メモ入力フォーム 「手元のmemoList(State)に追加する」 */}
-        <form onSubmit={handleAddMemo} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '10px' }}>
+        <form onSubmit={handleAddMemo} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '100px' }}>
           <input
             type='text'
             value={newMemo}
@@ -389,7 +421,11 @@ export const LoginSuccess = ({ user, onReset }) => {
               whiteSpace: 'pre-wrap', // 改行などもそのまま綺麗に見せる
             }}
           />
-          <button type='submit'>追加する</button>
+
+          {/* 追加ボタン */}
+          <AddButtonPlus type='submit'>
+            <span>＋</span>
+          </AddButtonPlus>
         </form>
       </main>
     </div>
