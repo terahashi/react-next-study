@@ -271,7 +271,7 @@ export const LoginFormApp = () => {
       {' '}
       <GlobalStyle />
       <AppContainer>
-        <div style={{ padding: '20px', margin: '0 auto' }}>
+        <div style={{ margin: '0 auto' }}>
           <h2>ログインフォーム</h2>
           <div
             style={{
