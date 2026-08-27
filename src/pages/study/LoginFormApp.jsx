@@ -47,6 +47,22 @@ const AppContainer = styled.div`
   background-color: #f1f1f1;
 `;
 
+// メインコンテンツの囲み枠
+const ContentWrapper = styled.div`
+  margin: 0 auto;
+`;
+
+// 動作確認用のアカウント情報　欄
+const InfoBox = styled.div`
+  background-color: #d5e9f9;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1c3d5a;
+`;
+
 // エラーの日本語化：ログインや新規登録で表示される「Supabaseの英語エラー」を日本語に変換する関数を作成
 const translateError = (errorMessage) => {
   if (!errorMessage) return ''; // 「エラーメッセージが無い場合」は空文字を返す
@@ -271,19 +287,9 @@ export const LoginFormApp = () => {
       {' '}
       <GlobalStyle />
       <AppContainer>
-        <div style={{ margin: '0 auto' }}>
+        <ContentWrapper>
           <h2>ログインフォーム</h2>
-          <div
-            style={{
-              backgroundColor: '#d5e9f9',
-              padding: '12px 16px',
-              borderRadius: '6px',
-              marginBottom: '20px',
-              fontSize: '14px',
-              lineHeight: '1.6',
-              color: '#1c3d5a',
-            }}
-          >
+          <InfoBox>
             <strong>■動作確認用のアカウント情報</strong>
             <br />
             <strong>【ログインを試したい場合（テスト用）】</strong>
@@ -295,7 +301,7 @@ export const LoginFormApp = () => {
             <span>※「新規登録ボタン」で自由なメールアドレス・パスワードで登録も可能。</span>
             <br />
             <strong>このアプリは「React × ⚡️Supabase」を使用して作成しています。</strong>
-          </div>
+          </InfoBox>
 
           {/* ⬇︎ログインフォーム初期画面 */}
           {/* Login.jsxを表示するコンポーネントを呼び出す */}
@@ -361,7 +367,7 @@ export const LoginFormApp = () => {
           ログイン
         </button>
       </form> */}
-        </div>
+        </ContentWrapper>
       </AppContainer>
     </>
   );
