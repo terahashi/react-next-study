@@ -6,6 +6,27 @@ import { memoServiceSupabase } from '../../lib/memoServiceSupabase';
 
 import styled from 'styled-components';
 
+// 画面全体の幅制限
+const PageWrapper = styled.div`
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+`;
+
+// ヘッダー領域
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 80px;
+  gap: 10px;
+`;
+
+//ヘッダーのタイトル
+const HeaderTitle = styled.h2`
+  margin: 0;
+`;
+
 //「プロフィールカード」全体のコンテナ
 const Card = styled.div`
   max-width: 450px;
@@ -68,7 +89,93 @@ const LogOutButton = styled.button`
   }
 `;
 
-//追加ボタンをプラスマーク(+)
+// エラーメッセージの表示エリア
+const ErrorAlert = styled.p`
+  color: #dc3545;
+  font-size: 13px;
+  background-color: #f8d7da;
+  padding: 8px;
+  border-radius: 4px;
+`;
+
+// --------------------------------------------------
+// 「追加したメモの初期表示」と「編集」
+// --------------------------------------------------
+
+const MemoUl = styled.ul`
+  padding: 0;
+  list-style: none;
+`;
+
+// メモ1行分の横並びコンテナ(編集モード・通常モード共通)
+const MemoRow = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0 20px;
+  margin-bottom: 30px;
+`;
+
+//編集中の入力エリア
+const EditInput = styled.input`
+  font-size: 1.12rem;
+  text-align: left;
+  display: inline-block;
+  flex: 1; /* 画面幅に合わせて伸縮 */
+  min-width: 0; /* Flexbox内で文字の折り返しを正常に動かすために必須 */
+  padding: 8px;
+  border-bottom: 2px solid #007bff;
+  outline: none;
+  box-sizing: border-box;
+`;
+
+// 通常時のメモテキスト
+const MemoTextSpan = styled.span`
+  font-size: 1.12rem;
+  text-align: left;
+  display: inline-block;
+  flex: 1; /* 画面幅に合わせて伸縮 */
+  min-width: 0; /* Flexbox内で文字の折り返しを正常に動かすために必須 */
+  padding: 8px;
+  border-bottom: 2px solid #007bff;
+  cursor: pointer;
+  white-space: pre-wrap; /* 入力時の改行(Enter)をそのまま保持して改行する */
+  word-break: break-all; /* 英数字や長い単語でも枠線を超えずに途中で折り返す */
+  box-sizing: border-box;
+`;
+
+// 編集用ボタン(更新・取消)
+const ActionButton = styled.button`
+  background-color: #2460a0;
+  white-space: nowrap; /* ボタン内の文字が改行されるのを防止 */
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 6px 10px;
+`;
+
+// --------------------------------------------------
+// メモ新規追加フォーム(form要素)
+// --------------------------------------------------
+// 新しいメモを追加するフォーム本体
+const AddMemoForm = styled.form`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0 20px;
+  margin-bottom: 100px;
+`;
+
+// 新規メモの入力欄
+const MemoInput = styled.input`
+  font-size: 1.12rem;
+  flex: 1 1 0%;
+  padding: 8px;
+  outline: none;
+  min-height: 1.5em;
+  white-space: pre-wrap;
+`;
+
+// プラスボタン(送信)
 const AddButtonPlus = styled.button`
   background-color: #2460a0;
   color: #d4e1fe;
@@ -78,23 +185,22 @@ const AddButtonPlus = styled.button`
   height: 36px;
   min-width: 36px;
   min-height: 36px;
-
   align-self: center;
-
   padding: 0;
   line-height: 0;
   box-sizing: border-box;
-
   font-size: 20px;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+
   span {
     display: inline-block;
     line-height: 1;
   }
-  cursor: pointer;
+
   &:hover {
     background-color: #074870;
   }
@@ -112,8 +218,8 @@ export const LoginSuccess = ({ user, onReset }) => {
   const [errorMsg, setErrorMsg] = useState('');
 
   //💡「メモを再編集するため」のState
-  const [editingMemoId, setEditingMemoId] = useState(null); // タップしたときに編集モードを開始するためのstate。つまり編集中のメモのID（初期値: null）
-  const [editText, setEditText] = useState(''); // 編集中のメモのテキスト（初期値: 空文字）
+  const [editingMemoId, setEditingMemoId] = useState(null); // タップしたときに編集モードを開始するためのstate。つまり編集中のメモのID(初期値: null)
+  const [editText, setEditText] = useState(''); // 編集中のメモのテキスト(初期値: 空文字)
 
   // //モジュール化前のコード。
   // // ⬇︎1:画面表示時に「自分のメモ一覧」を【Supabaseから取得する】
@@ -217,7 +323,7 @@ export const LoginSuccess = ({ user, onReset }) => {
 
   // 💡(編集モードで)Enterキーを押すと送信/更新される(UXを使いやすくするために作成)
   const handleKeyDown = (e, id) => {
-    // Enterキーが押された、かつ Shiftキーが押されていない場合（※単体Enterで送信）
+    // Enterキーが押された、かつ Shiftキーが押されていない場合(※単体Enterで送信)
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault(); // 改行されるデフォルトの動きを防止
       handleUpdateMemo(id); // 更新処理を実行！
@@ -304,20 +410,12 @@ export const LoginSuccess = ({ user, onReset }) => {
   };
 
   return (
-    <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
+    <PageWrapper>
       {/* ⬇︎ヘッダー */}
-      <header
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '80px',
-          gap: '10px',
-        }}
-      >
-        <h2 style={{ margin: 0 }}>マイページ</h2>
+      <Header>
+        <HeaderTitle>マイページ</HeaderTitle>
         <LogOutButton onClick={onReset}>ログアウト</LogOutButton>
-      </header>
+      </Header>
 
       {/* メインコンテンツ*/}
       <main>
@@ -343,7 +441,7 @@ export const LoginSuccess = ({ user, onReset }) => {
         </Card>
 
         {/* ⬇︎エラー表示 */}
-        {errorMsg && <p style={{ color: '#dc3545', fontSize: '13px', backgroundColor: '#f8d7da', padding: '8px', borderRadius: '4px' }}>{errorMsg}</p>}
+        {errorMsg && <ErrorAlert>{errorMsg}</ErrorAlert>}
 
         {/* ⬇︎メモ入力フォーム 「手元のmemoList(State)に追加する」 */}
         <div style={{ marginBottom: '50px' }}>
@@ -353,81 +451,47 @@ export const LoginSuccess = ({ user, onReset }) => {
         </div>
 
         {/* ⬇︎メモ一覧の結果表示 */}
-        <div style={{ marginBottom: '50px' }}>
+        <div style={{ marginBottom: '60px' }}>
           {loading ? (
             <h3>読み込み中...</h3>
           ) : memoList.length === 0 ? (
             <p>保存されたメモはまだありません。</p>
           ) : (
-            <ul>
+            <MemoUl>
               {memoList.map((memo) => (
                 <li key={memo.id} style={{ listStyleType: 'none' }}>
-                  {/* ②編集モード（editingMemoId === memo.id）なら input に化ける！ */}
+                  {/* ⬇︎②編集モード(editingMemoId === memo.id)なら input に化ける！ */}
                   {editingMemoId === memo.id ? (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '10px' }}>
-                      {/* contentEditable を使うと、<span> や <div> の見た目・サイズのまま、直接文字を入力・編集できる */}
-                      <div
-                        contentEditable
-                        suppressContentEditableWarning
-                        onInput={(e) => setEditText(e.currentTarget.textContent)}
-                        onKeyDown={(e) => handleKeyDown(e, memo.id)} //Enterキーでの自動更新を判定する関数
-                        autoFocus
-                        style={{
-                          borderBottom: '2px solid #007bff',
-                          padding: '8px',
-                          outline: 'none',
-                          minHeight: '1.5em', // 空になっても高さが潰れないようにする
-                          whiteSpace: 'pre-wrap', // 改行などもそのまま綺麗に見せる
-                        }}
-                      >
-                        {memo.content}
-                      </div>
-                      <button onClick={() => handleUpdateMemo(memo.id)}>更新 </button>
-                      <button onClick={() => setEditingMemoId(null)}>取消</button>
-                    </div>
+                    <MemoRow>
+                      {/* input欄 */}
+                      <EditInput type='text' value={editText} onChange={(e) => setEditText(e.target.value)} onKeyDown={(e) => handleKeyDown(e, memo.id)} autoFocus />
+
+                      <ActionButton onClick={() => handleUpdateMemo(memo.id)}>更新 </ActionButton>
+                      <ActionButton onClick={() => setEditingMemoId(null)}>取消</ActionButton>
+                    </MemoRow>
                   ) : (
-                    /* ①初期表示。クリックすると「handleStartEditingイベント」でメモ編集に切り替わる */
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0 20px', marginBottom: '10px' }}>
-                      <span
-                        onClick={() => handleStartEditing(memo)}
-                        style={{
-                          padding: '8px',
-                          borderBottom: '2px solid #707070',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        {memo.content}
-                      </span>
-                      <button onClick={() => handleDeleteMemo(memo.id)}>削除</button>
-                    </div>
+                    /* ⬇︎①初期表示。クリックすると「handleStartEditingイベント」でメモ編集に切り替わる */
+                    <MemoRow>
+                      <MemoTextSpan onClick={() => handleStartEditing(memo)}>{memo.content}</MemoTextSpan>
+                      <ActionButton onClick={() => handleDeleteMemo(memo.id)}>削除</ActionButton>
+                    </MemoRow>
                   )}
                 </li>
               ))}
-            </ul>
+            </MemoUl>
           )}
         </div>
 
-        {/* ⬇︎メモ入力フォーム 「手元のmemoList(State)に追加する」 */}
-        <form onSubmit={handleAddMemo} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 20px', marginBottom: '100px' }}>
-          <input
-            type='text'
-            value={newMemo}
-            onChange={(e) => setNewMemo(e.target.value)}
-            placeholder='新しいメモを入力'
-            style={{
-              padding: '8px',
-              outline: 'none',
-              minHeight: '1.5em', // 空になっても高さが潰れないようにする
-              whiteSpace: 'pre-wrap', // 改行などもそのまま綺麗に見せる
-            }}
-          />
+        {/* ⬇︎メモ追加フォーム 「手元のmemoList(State)に追加する」 */}
+        <AddMemoForm onSubmit={handleAddMemo}>
+          <MemoInput type='text' value={newMemo} onChange={(e) => setNewMemo(e.target.value)} placeholder='新しいメモを入力' />
 
           {/* 追加ボタン */}
           <AddButtonPlus type='submit'>
             <span>＋</span>
           </AddButtonPlus>
-        </form>
+        </AddMemoForm>
       </main>
-    </div>
+    </PageWrapper>
   );
 };
