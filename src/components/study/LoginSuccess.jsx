@@ -118,7 +118,7 @@ const MemoRow = styled.div`
 
 //編集中の入力エリア
 const EditInput = styled.input`
-  font-size: 1.12rem;
+  font-size: 16px;
   text-align: left;
   display: inline-block;
   flex: 1; /* 画面幅に合わせて伸縮 */
@@ -127,11 +127,25 @@ const EditInput = styled.input`
   border-bottom: 2px solid #007bff;
   outline: none;
   box-sizing: border-box;
+
+  /* --- 見た目(背景を透明にし、下線のみにする) --- */
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #007bff;
+  border-radius: 0;
+  outline: none;
+
+  /* --- クリック時(フォーカス時)のスタイル固定 --- */
+  &:focus {
+    outline: none;
+    background: transparent;
+    border-bottom: 2px solid #007bff;
+  }
 `;
 
 // 通常時のメモテキスト
 const MemoTextSpan = styled.span`
-  font-size: 1.12rem;
+  font-size: 16px;
   text-align: left;
   display: inline-block;
   flex: 1; /* 画面幅に合わせて伸縮 */
@@ -167,12 +181,26 @@ const AddMemoForm = styled.form`
 
 // 新規メモの入力欄
 const MemoInput = styled.input`
-  font-size: 1.12rem;
+  font-size: 16px;
   flex: 1 1 0%;
   padding: 8px;
   outline: none;
   min-height: 1.5em;
   white-space: pre-wrap;
+
+  /* --- 見た目(背景を透明にし、下線のみにする) --- */
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #007bff;
+  border-radius: 0;
+  outline: none;
+
+  /* --- クリック時(フォーカス時)のスタイル固定 --- */
+  &:focus {
+    outline: none;
+    background: transparent;
+    border-bottom: 2px solid #007bff;
+  }
 `;
 
 // プラスボタン(送信)
