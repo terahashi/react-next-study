@@ -1,12 +1,75 @@
-# React + Vite
+# ログイン機能付き メモ管理アプリケーション
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 概要
 
-Currently, two official plugins are available:
+ユーザー認証(ログイン/ログアウト機能)を備えたシンプルで操作性に優れたメモ管理Webアプリケーションです。
+認証情報に紐づいたメモの新規作成・編集・削除(CRUD操作)をリアルタイムに行うことができます。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## デモサイトURL
 
-## Expanding the ESLint configuration
+実際に動作を確認されたい方は、以下の公開URLよりブラウザで直接お試しいただけます。
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- App URL: https://react-next-study.netlify.app/study/LoginFormApp
+
+- テスト用アカウント (どなたでもログイン可能です)
+  - メールアドレス: `test00@example.com`
+  - パスワード: `Test_25269123Pass`
+
+※実際にご自身のメールアドレスで新規登録してご利用いただくことも可能です。
+
+## 使用技術 (Tech Stack)
+
+- **フロントエンド**: React (Vite), JavaScript
+- **スタイリング**: styled-components
+- **バックエンド / DB**: Supabase (Auth / Database)
+- **デプロイ**: Netlify
+
+---
+
+## 主な機能
+
+1. ユーザー認証機能
+   - Supabase Auth を利用したメールアドレス/パスワード認証
+   - ログイン状態に応じた画面遷移(マイページ・メモ機能へのアクセス制限)
+   - ログアウト機能
+
+2. メモ管理機能(CRUD)
+   - メモ一覧表示(ログインユーザー固有のデータを新しい順に取得)
+   - メモの新規追加・リアルタイム更新・削除
+   - インライン編集モード(メモタップで直接入力・更新可能)
+
+3. レスポンシブ・UI/UX最適化
+   - PC / スマホ(iOS・Android)完全対応のレスポンシブレイアウト
+
+## 工夫した点
+
+- コンポーネントの責務分離と保守性の向上
+  - SupabaseへのAPI通信処理をモジュール化(memoServiceSupabaseファイル)し、UIコンポーネントからロジックを分離。コードの可読性とメンテナンス性を意識しました。
+- UI/UX の細部へのこだわり
+  - スマホ表示での意図しないレイアウト崩れ(文字数に応じた横伸びやiOS Safariの自動ズーム現象)を防止するスタイリングを構築しました。
+- 純粋な styled-componentsによる一貫したスタイリング
+  - インラインスタイル(CSS直書き)を排除し、すべてstyled-componentsに統一してデザイン設計の整合性を保ちました。
+
+## セットアップ方法
+
+以下の手順でローカル環境で動作確認できます。
+
+### 1. パッケージのインストール
+
+```
+npm install
+```
+
+### 2. 環境変数 (.env) の設定
+
+・セキュリティ保護のため、SupabaseのAPI キーを含む【.envファイルはGit管理対象外（.gitignore 登録）としています。】
+・ルートディレクトリに 「.envファイルを作成」し、ご自身のSupabaseプロジェクトのAPIキーを設定してください。
+
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+### 3. 開発サーバーの起動
+
+```
+npm run dev
+```
