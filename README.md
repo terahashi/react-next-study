@@ -65,8 +65,10 @@ npm install
 ・セキュリティ保護のため、SupabaseのAPI キーを含む【.envファイルはGit管理対象外（.gitignore 登録）としています。】
 ・ルートディレクトリに 「.envファイルを作成」し、ご自身のSupabaseプロジェクトのAPIキーを設定してください。
 
+```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
 ### 3. 開発サーバーの起動
 
